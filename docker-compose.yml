@@ -1,0 +1,17 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: fiber-postgres
+    environment:
+      - POSTGRES_USER=pglekshmi
+      - POSTGRES_PASSWORD=expo123
+      - POSTGRES_DB=fiber-postgres
+      - POSTGRES_PORT=5432
+    ports:
+      - 5432:5432
+    
+
+volumes:
+  postgres:
+    name: fiber-postgres
