@@ -22,3 +22,6 @@ down:
 
 enter:
 	@psql -h localhost -U pglekshmi -d fiber-postgres
+
+fmt:
+	@gofmt -s -w ./..
