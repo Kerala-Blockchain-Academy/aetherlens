@@ -53,7 +53,7 @@ func BlockDetails(DB *gorm.DB) {
 			}
 			blockHash := newBlock.Hash
 			fmt.Println("BlovkHash", blockHash)
-			fmt.Println(blocks.Body().Transactions[0].To())
+			fmt.Println(blocks.Body().Transactions[0].Cost())
 			if len(blocks.Body().Transactions)==0{
 				fmt.Println("No transactions in this block, skipping to the next block")
 				i++  // Move to the next block
@@ -61,6 +61,7 @@ func BlockDetails(DB *gorm.DB) {
 			}
 			Count := int64(0) 
 			contractCount := 0
+			contractCall := models.Contract_call{}
 
 			for _, k := range blocks.Body().Transactions {
 				fmt.Println(k)
@@ -68,10 +69,30 @@ func BlockDetails(DB *gorm.DB) {
 				if k.To() == nil {
 					toAddress = "0x0"
 					contractCount++
+					receipt,err:= Client.TransactionReceipt(context.Background(),k.Hash())
+					if err==nil{ //to store contract address to contract_call table
+						fmt.Println("Contract Address Found")
+						contractCall.Address = receipt.ContractAddress.Hex()
+						if err:=DB.Create(&contractCall).Error;err!=nil{
+							fmt.Println("Something wrong with connecting Contract call Table")
+						}
+					}
 				}
 
 				if k.To() != nil {
+
 					toAddress = k.To().Hex()
+					err := DB.Model(&models.Contract_call{}).
+					Where("Address = ?", k.To().Hex()).
+					Update("Calls", gorm.Expr("Calls + 1")).Error
+
+					if err!= nil{
+						fmt.Println("No such contract address")
+					}
+
+					
+
+
 				}
 				Count++;
 
@@ -85,6 +106,7 @@ func BlockDetails(DB *gorm.DB) {
 					Value:     k.Value().String(),
 					Data:      hex.EncodeToString(k.Data()),
 					BlockNumber: newBlock.Number,
+					Time: newBlock.Time,
 				}
 				fmt.Println("New Transaction", newTransaction)
 				if err := DB.Create(&newTransaction).Error; err != nil {

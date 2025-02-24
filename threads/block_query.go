@@ -68,17 +68,34 @@ for {
 	}
 	Count := int64(0) 
 	contractCount := 0
-	 
+	contractCall := models.Contract_call{}
+
 	for _,k:= range blocks.Body().Transactions{
 		fmt.Println(k)
 		 toAddress:="0x0"
 		if k.To()==nil{
 			toAddress = "0x0"
 			contractCount++
+			receipt,err:= Client.TransactionReceipt(context.Background(),k.Hash())
+
+			if err==nil{ //to store contract address to contract_call table
+				fmt.Println("Contract Address Found")
+				contractCall.Address = receipt.ContractAddress.Hex()
+				if err:=DB.Create(&contractCall).Error;err!=nil{
+					fmt.Println("Something wrong with connecting Contract call Table")
+				}
+			}
 		}
 
 		if(k.To()!=nil){
 			toAddress = k.To().Hex()
+			err := DB.Model(&models.Contract_call{}).
+					Where("Address = ?", k.To().Hex()).
+					Update("Calls", gorm.Expr("Calls + 1")).Error
+
+					if err!= nil{
+						fmt.Println("No such contract address")
+					}
 		}
 		Count++;
 

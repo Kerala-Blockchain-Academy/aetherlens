@@ -17,7 +17,7 @@ func main() {
 		fmt.Println("Cannot connect to DB")
 	}
 	
-	if err := DB.AutoMigrate(&models.Block{},&models.Transaction{},&models.TransCount{}); err != nil {
+	if err := DB.AutoMigrate(&models.Block{},&models.Transaction{},&models.TransCount{},models.Contract_call{}); err != nil {
 		fmt.Println("Error in AutoMigrate:", err)
 		log.Fatal(err)
 	} else {
@@ -40,8 +40,29 @@ func main() {
 		return controllers.GetlasttenCount(c,DB)
 	})
 	
+	app.Get("/blocks",func(c *fiber.Ctx)error{
+		return controllers.Get20Blocks(c,DB)
+	})
 
-	
+	app.Get("/block/:id",func(c *fiber.Ctx)error{
+		return controllers.GetBlockbyNymber(c,DB)
+	})
+
+	app.Get("/trans",func(c *fiber.Ctx)error{
+		return controllers.Get20Transactions(c,DB)
+	})
+
+	app.Get("/trans/:id",func(c *fiber.Ctx)error{
+		return controllers.GetTransbyHash(c,DB)
+	})
+
+	app.Get("/transCount",func(c *fiber.Ctx)error{
+		return controllers.GetTotalTransactions(c,DB)
+	})
+
+	app.Get("/contractCount",func(c *fiber.Ctx)error{
+		return controllers.GetContractCount(c,DB)
+	})
 	// fmt.Println(blocks.Body().Transactions[0].Hash())
 	// var lastBlock models.Block
 	// if err := DB.Last(&lastBlock).Error; err!=nil{

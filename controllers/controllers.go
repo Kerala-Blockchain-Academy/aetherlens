@@ -3,9 +3,11 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/pglekshmi/explorerGoPostgreSQL/models"
 	"gorm.io/gorm"
 )
 
@@ -67,6 +69,72 @@ func GetlasttenCount(c *fiber.Ctx ,DB *gorm.DB) error{
 
 }
 
-func GetallTransactions(){
+func Get20Blocks(c *fiber.Ctx,DB *gorm.DB)error{
+	var blocks []models.Block
+    result := DB.Order("Number DESC").Limit(20).Find(&blocks) // SELECT * FROM blocks;
     
+    if err:=result.Error;err != nil {
+        return err
+    }
+    return c.Status(http.StatusOK).JSON(&blocks)
+    
+}
+
+func GetBlockbyNymber(c *fiber.Ctx ,DB *gorm.DB)error{
+	var block []models.Block
+	blockNumberStr :=c.Params("id")
+	blockNumber, err := strconv.ParseUint(blockNumberStr, 10, 64)//Converting String to Uint64
+if err != nil {
+	fmt.Println("Error converting block number:", err)
+	
+}
+	fmt.Println("BlockNumber",blockNumber)
+    result := DB.Where("Number = ?", blockNumber).Find(&block) // SELECT * FROM bloc WHERE block_number = ?;
+    
+    if err:=result.Error;err != nil {
+        return err
+    }
+    return c.Status(http.StatusOK).JSON(&block)
+}
+
+func Get20Transactions(c *fiber.Ctx ,DB *gorm.DB)error{
+	var trans []models.Transaction
+    result := DB.Order("Block_Number DESC").Limit(20).Find(&trans) // SELECT * FROM blocks;
+    
+    if err:=result.Error;err != nil {
+        return err
+    }
+    return c.Status(http.StatusOK).JSON(&trans)
+}
+
+func GetTransbyHash(c *fiber.Ctx ,DB *gorm.DB) error{
+	var tbyhash []models.Transaction
+	transHash := c.Params("id")
+	fmt.Println("transaction Hash",transHash)
+    result := DB.Where("Thash = ?", transHash).Find(&tbyhash) // SELECT * FROM bloc WHERE block_number = ?;
+    
+    if err:=result.Error;err != nil {
+        return err
+    }
+    return c.Status(http.StatusOK).JSON(&tbyhash)
+}
+
+func GetTotalTransactions(c *fiber.Ctx ,DB *gorm.DB)error{
+	var totalCount int64
+
+	err:=DB.Table("trans_counts").Select("SUM(Count)").Scan(&totalCount).Error
+	if err!=nil{
+		fmt.Println("Cannot get total count from trans_count table")
+		return err
+	}
+    return c.Status(http.StatusOK).JSON(totalCount)
+}
+
+func GetContractCount(c *fiber.Ctx ,DB *gorm.DB)error{
+	var totalEntries int64
+	err:=DB.Table("contract_calls").Count(&totalEntries).Error
+	if err!=nil{
+		return err
+	}
+	return c.Status(http.StatusOK).JSON(&totalEntries)
 }

@@ -14,4 +14,5 @@ type Transaction struct{
 	Value string `json:"Value"`
 	Data string `json:"Data"`
 	BlockNumber uint64 `json:"BlockNumber"`
+	Time uint64 `json:"Time"`
 }
