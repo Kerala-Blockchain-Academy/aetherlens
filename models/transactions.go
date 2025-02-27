@@ -12,7 +12,6 @@ type Transaction struct{
 	Type uint8 `json:"Type"`
 	Gas uint64 `json:"Gas"`
 	Value string `json:"Value"`
-	Data string `json:"Data"`
 	BlockNumber uint64 `json:"BlockNumber"`
 	Time uint64 `json:"Time"`
 }

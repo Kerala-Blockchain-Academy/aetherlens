@@ -2,11 +2,9 @@ package threads
 
 import (
 	"context"
-	"encoding/hex"
 	"fmt"
 	"log"
 	"time"
-
 	"github.com/pglekshmi/explorerGoPostgreSQL/config"
 	"github.com/pglekshmi/explorerGoPostgreSQL/controllers"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
@@ -14,7 +12,7 @@ import (
 )
 
 func BlockQuery(DB *gorm.DB){
-	Client, err := config.ConnectNode()
+	Client, err := config.RetryConnectNode(5,2 * time.Second)
 	if err != nil {
 		fmt.Println("Error in connecting to Node")
 	}
@@ -72,9 +70,12 @@ for {
 
 	for _,k:= range blocks.Body().Transactions{
 		fmt.Println(k)
-		 toAddress:="0x0"
+		toAddress := controllers.TransAddressCheck(k)
+		tHash := controllers.TransHashCheck(k)
+		tType := controllers.TransTypeCheck(k)
+		tValue := controllers.TransValueCheck(k)
 		if k.To()==nil{
-			toAddress = "0x0"
+			
 			contractCount++
 			receipt,err:= Client.TransactionReceipt(context.Background(),k.Hash())
 
@@ -87,27 +88,25 @@ for {
 			}
 		}
 
-		if(k.To()!=nil){
-			toAddress = k.To().Hex()
+
 			err := DB.Model(&models.Contract_call{}).
-					Where("Address = ?", k.To().Hex()).
+					Where("Address = ?", toAddress).
 					Update("Calls", gorm.Expr("Calls + 1")).Error
 
 					if err!= nil{
 						fmt.Println("No such contract address")
 					}
-		}
+		
 		Count++;
 
 		newTransaction:= models.Transaction{
-			Thash:k.Hash().Hex(),
+			Thash:tHash,
 			// To:blocks.Body().Transactions[k].To().Hex(),
 			To:toAddress,
 
-			Type:k.Type(),
+			Type:tType,
 			Gas:k.Gas(),
-			Value:k.Value().String(),
-			Data:hex.EncodeToString(k.Data()),
+			Value:tValue,
 			BlockNumber:newBlock.Number,
 		}
 		fmt.Println("New Transaction",newTransaction)
