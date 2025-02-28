@@ -62,7 +62,7 @@ func main() {
 		return controllers.GetTransbyHash(c, DB)
 	})
 
-	app.Get("/transCount", func(c *fiber.Ctx) error { // Total Transaction count
+	app.Get("/ ", func(c *fiber.Ctx) error { // Total Transaction count
 		return controllers.GetTotalTransactions(c, DB)
 	})
 
