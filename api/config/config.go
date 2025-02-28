@@ -9,22 +9,20 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func ConnectNode()(*ethclient.Client,error){
-	url := "http://127.0.0.1:8545"
+func ConnectNode() (*ethclient.Client, error) {
+	url := "http://192.168.0.155:8545"
 
-	client,err:= ethclient.Dial(url)
+	client, err := ethclient.Dial(url)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to Ethereum node: %w", err)
 	}
-	fmt.Println(err)
 	_, err = client.BlockNumber(context.Background())
-	fmt.Println("client error",err)
+	
 	if err != nil {
 		return nil, fmt.Errorf("ethereum node is unreachable: %w", err)
 	}
 
-	
 	return client, nil
 
 }
@@ -35,7 +33,6 @@ func RetryConnectNode(maxRetries int, delay time.Duration) (*ethclient.Client, e
 
 	for i := 1; i <= maxRetries; i++ {
 		client, err = ConnectNode()
-		fmt.Println("client",err)
 		
 		if client != nil {
 			fmt.Println("Successfully connected to node!")
