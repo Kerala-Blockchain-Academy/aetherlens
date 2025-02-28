@@ -52,7 +52,7 @@ func BlockDetails(DB *gorm.DB) {
 			}
 			blockHash := newBlock.Hash
 			fmt.Println("BlovkHash", blockHash)
-			if len(blocks.Body().Transactions) == 0 {
+			if len(blocks.Body().Transactions) == 0 { // Checking whether transactions present
 				fmt.Println("No transactions in this block, skipping to the next block")
 				i++ // Move to the next block
 				continue
@@ -63,6 +63,7 @@ func BlockDetails(DB *gorm.DB) {
 
 			for _, k := range blocks.Body().Transactions {
 				fmt.Println(k)
+				// Checking all the transaction fields
 				toAddress := TransAddressCheck(k)
 				tHash := TransHashCheck(k)
 				tType := TransTypeCheck(k)
@@ -74,13 +75,13 @@ func BlockDetails(DB *gorm.DB) {
 					if err == nil { //to store contract address to contract_call table
 						fmt.Println("Contract Address Found")
 						contractCall.Address = receipt.ContractAddress.Hex()
-						if err := DB.Create(&contractCall).Error; err != nil {
+						if err := DB.Create(&contractCall).Error; err != nil { // Entering details to contract_call Table
 							fmt.Println("Something wrong with connecting Contract call Table")
 						}
 					}
 				}
 
-				err := DB.Model(&models.Contract_call{}).
+				err := DB.Model(&models.Contract_call{}). // Entering details to contract_call Table
 					Where("Address = ?", toAddress).
 					Update("Calls", gorm.Expr("Calls + 1")).Error
 
@@ -92,9 +93,7 @@ func BlockDetails(DB *gorm.DB) {
 
 				newTransaction := models.Transaction{
 					Thash:tHash,
-					// To:blocks.Body().Transactions[k].To().Hex(),
 					To: toAddress,
-
 					Type:        tType,
 					Gas:         k.Gas(),
 					Value:       tValue,
@@ -102,7 +101,7 @@ func BlockDetails(DB *gorm.DB) {
 					Time:        newBlock.Time,
 				}
 				fmt.Println("New Transaction", newTransaction)
-				if err := DB.Create(&newTransaction).Error; err != nil {
+				if err := DB.Create(&newTransaction).Error; err != nil { // Entering details to transaction Table
 					fmt.Println("Something went wrong", err)
 
 				}
@@ -113,7 +112,7 @@ func BlockDetails(DB *gorm.DB) {
 				Count:         Count,
 				ContractCount: contractCount,
 			}
-			if err := DB.Create(&transCount).Error; err != nil {
+			if err := DB.Create(&transCount).Error; err != nil { // Entering details to transcount table
 				fmt.Println("Something went wrong", err)
 
 			}
