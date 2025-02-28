@@ -3,10 +3,10 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"time"
 	"github.com/pglekshmi/explorerGoPostgreSQL/config"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
 	"gorm.io/gorm"
+	"time"
 )
 
 func BlockDetails(DB *gorm.DB) {
@@ -23,15 +23,12 @@ func BlockDetails(DB *gorm.DB) {
 
 	if err := DB.First(&firstBlock).Error; err != nil { //Checking whether DB is empty
 		i := uint64(0)
-		for {                           // Getting all the blocks from 0 to latest
-			fmt.Println("hello")
-
+		for { // Getting all the blocks from 0 to latest
 			fmt.Println("latest block", latestBlockNumber)
 			if i > latestBlockNumber {
 				break // Exit when i exceeds the latest block number
 			}
 
-			fmt.Println(i)
 			blocks, err := GetBlockDetails(i)
 
 			if err != nil {
@@ -50,8 +47,7 @@ func BlockDetails(DB *gorm.DB) {
 			} else {
 				fmt.Println("Block inserted successfully!")
 			}
-			blockHash := newBlock.Hash
-			fmt.Println("BlovkHash", blockHash)
+
 			if len(blocks.Body().Transactions) == 0 { // Checking whether transactions present
 				fmt.Println("No transactions in this block, skipping to the next block")
 				i++ // Move to the next block
@@ -62,7 +58,7 @@ func BlockDetails(DB *gorm.DB) {
 			contractCall := models.Contract_call{}
 
 			for _, k := range blocks.Body().Transactions {
-				fmt.Println(k)
+
 				// Checking all the transaction fields
 				toAddress := TransAddressCheck(k)
 				tHash := TransHashCheck(k)
@@ -82,8 +78,8 @@ func BlockDetails(DB *gorm.DB) {
 				}
 
 				err := DB.Model(&models.Contract_call{}). // Entering details to contract_call Table
-					Where("Address = ?", toAddress).
-					Update("Calls", gorm.Expr("Calls + 1")).Error
+										Where("Address = ?", toAddress).
+										Update("Calls", gorm.Expr("Calls + 1")).Error
 
 				if err != nil {
 					fmt.Println("No such contract address")
@@ -92,15 +88,15 @@ func BlockDetails(DB *gorm.DB) {
 				Count++
 
 				newTransaction := models.Transaction{
-					Thash:tHash,
-					To: toAddress,
+					Thash:       tHash,
+					To:          toAddress,
 					Type:        tType,
 					Gas:         k.Gas(),
 					Value:       tValue,
 					BlockNumber: newBlock.Number,
 					Time:        newBlock.Time,
 				}
-				fmt.Println("New Transaction", newTransaction)
+
 				if err := DB.Create(&newTransaction).Error; err != nil { // Entering details to transaction Table
 					fmt.Println("Something went wrong", err)
 
@@ -118,7 +114,7 @@ func BlockDetails(DB *gorm.DB) {
 			}
 			fmt.Println("All Transactions entered")
 			i++
-			fmt.Println(i)
+
 		}
 	}
 }
