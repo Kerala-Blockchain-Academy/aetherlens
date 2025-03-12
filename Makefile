@@ -1,17 +1,17 @@
 CURRENT_DIR = $(shell pwd)
 
 run:
-	@cd api/ && go run .
+	@go run .
 
 build:
-	@cd api/ && go build main.go
+	@go build main.go
 
 air:
-	@mkdir -p api/bin
-	@GOBIN=$(CURRENT_DIR)/api/bin go install github.com/air-verse/air@latest
+	@mkdir -p bin
+	@GOBIN=$(CURRENT_DIR)/bin go install github.com/air-verse/air@latest
 
 dev:
-	$(CURRENT_DIR)/api/bin/air 
+	$(CURRENT_DIR)/bin/air 
 
 up:
 	docker compose up -d
