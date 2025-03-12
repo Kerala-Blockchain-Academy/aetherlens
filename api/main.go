@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"time"
-
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/pglekshmi/explorerGoPostgreSQL/config"
@@ -37,6 +37,7 @@ func main() {
 	
 	app := fiber.New()
 	app.Use(logger.New())
+	app.Use(cors.New())
 
 	app.Get("/today", func(c *fiber.Ctx) error { // Today's hourly Transaction count
 		return controllers.GetdailyCount(c, DB)
@@ -62,14 +63,23 @@ func main() {
 		return controllers.GetTransbyHash(c, DB)
 	})
 
-	app.Get("/ ", func(c *fiber.Ctx) error { // Total Transaction count
+	app.Get("/transBlock/:id", func(c *fiber.Ctx) error { // Transaction details of queried block number
+		return controllers.GetTransbyBlock(c, DB)
+	})
+
+	app.Get("/transCount", func(c *fiber.Ctx) error { // Total Transaction count
 		return controllers.GetTotalTransactions(c, DB)
 	})
 
 	app.Get("/contractCount", func(c *fiber.Ctx) error { // Total Contract Created
 		return controllers.GetContractCount(c, DB)
 	})
+
+	app.Get("/blockDetails", func(c *fiber.Ctx) error { // Total Contract Created
+		return controllers.GettenBlockDetails(c, DB)
+	})
 	
+
 
 	app.Listen(":8080")
 

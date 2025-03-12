@@ -4,13 +4,20 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/joho/godotenv"
 )
 
 func ConnectNode() (*ethclient.Client, error) {
-	url := "http://192.168.0.155:8545"
+	if err:=godotenv.Load(); err!=nil{
+		fmt.Println("Cannot get the env file")
+	}
+	
+	url := os.Getenv("URL")
+	// url := "http://192.168.0.155:8545"
 
 	client, err := ethclient.Dial(url)
 

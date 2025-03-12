@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
 	"gorm.io/gorm"
@@ -38,10 +37,11 @@ func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	}
 
 	if len(results) == 0 {
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{"msg": "No Transactions today"})
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"msg": "No Transactions today"})
 	}
 	return c.Status(http.StatusOK).JSON(&results)
 
+	
 }
 
 func GetlasttenCount(c *fiber.Ctx, DB *gorm.DB) error {
@@ -115,6 +115,18 @@ func GetTransbyHash(c *fiber.Ctx, DB *gorm.DB) error {
 	return c.Status(http.StatusOK).JSON(&tbyhash)
 }
 
+func GetTransbyBlock(c *fiber.Ctx, DB *gorm.DB) error{
+	var tbyblock []models.Transaction
+	blockNumber := c.Params("id")
+	result := DB.Where("BlockNumber = ?", blockNumber).Find(&tbyblock) // SELECT * FROM bloc WHERE block_number = ?;
+
+	if err := result.Error; err != nil {
+		return err
+	}
+	return c.Status(http.StatusOK).JSON(&tbyblock)
+
+}
+
 func GetTotalTransactions(c *fiber.Ctx, DB *gorm.DB) error {
 	var totalCount int64
 
@@ -133,4 +145,15 @@ func GetContractCount(c *fiber.Ctx, DB *gorm.DB) error {
 		return err
 	}
 	return c.Status(http.StatusOK).JSON(&totalEntries)
+}
+
+func GettenBlockDetails(c *fiber.Ctx, DB *gorm.DB) error {
+	var blocks []models.Block
+result := DB.Order("number DESC").Limit(10).Find(&blocks)
+
+if result.Error != nil {
+    return result.Error
+} else {
+    return c.Status(http.StatusOK).JSON(&blocks)
+}
 }
