@@ -1,27 +1,26 @@
-CURRENT_DIR = $(shell pwd)
-
-run:
-	@go run .
-
-build:
-	@go build main.go
-
-air:
-	@mkdir -p bin
-	@GOBIN=$(CURRENT_DIR)/bin go install github.com/air-verse/air@latest
-
-dev:
-	$(CURRENT_DIR)/bin/air 
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
 
 up:
-	docker compose up -d
+	@docker compose up --build -d
+
+up-v:
+	@docker compose up --build
 
 down:
-	docker compose down
-
+	@docker compose down
 
 enter:
-	@psql -h localhost -U pglekshmi -d fiber-postgres
+	@docker exec -it aetherlens-db psql -U $(PG_USER) -d $(PG_DB)
+
+prune:
+	@docker system prune
+
+tidy:
+	@cd api/ && go mod tidy
 
 fmt:
-	@gofmt -s -w ./..
+	@cd api/ && gofmt -s -w ./..
+	@cd ui/ && npm run fmt

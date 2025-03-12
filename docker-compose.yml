@@ -1,17 +1,42 @@
-
 services:
   postgres:
     image: postgres:15
-    container_name: fiber-postgres
+    container_name: aetherlens-db
     environment:
-      - POSTGRES_USER=pglekshmi
-      - POSTGRES_PASSWORD=expo123
-      - POSTGRES_DB=fiber-postgres
-      - POSTGRES_PORT=5432
-    ports:
-      - 5432:5432
-    
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_DB}
+      - POSTGRES_PORT=${PG_PORT}
+    expose:
+      - ${PG_PORT}
 
-volumes:
-  postgres:
-    name: fiber-postgres
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: aetherlens-api
+    depends_on:
+      - postgres
+    environment:
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DB=${PG_DB}
+      - PG_PORT=${PG_PORT}
+      - CHAIN_URL=${CHAIN_URL}
+      - API_PORT=${API_PORT}
+    ports:
+      - ${API_PORT}:${API_PORT}
+    entrypoint: ./main
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: aetherlens-ui
+    depends_on:
+      - api
+    command: "pnpm run start --host 0.0.0.0"
+    volumes:
+      - ./ui/src:/ui/src
+    ports:
+      - ${UI_PORT}:${UI_PORT}

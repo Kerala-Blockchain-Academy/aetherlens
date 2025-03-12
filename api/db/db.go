@@ -2,14 +2,16 @@ package db
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"time"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"time"
 )
 
 func Connect() (*gorm.DB, error) {
-	dsn := "postgres://pglekshmi:expo123@localhost:5432/fiber-postgres"
+	dsn := fmt.Sprintf("postgres://%s:%s@aetherlens-db:%s/%s", os.Getenv("PG_USER"), os.Getenv("PG_PASSWORD"), os.Getenv("PG_PORT"), os.Getenv("PG_DB"))
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to DB: %w", err)

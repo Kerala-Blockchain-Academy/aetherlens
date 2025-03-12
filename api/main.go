@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
-	"github.com/gofiber/fiber/v2/middleware/cors"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/pglekshmi/explorerGoPostgreSQL/config"
 	"github.com/pglekshmi/explorerGoPostgreSQL/controllers"
@@ -81,6 +83,6 @@ func main() {
 	
 
 
-	app.Listen(":8080")
+	app.Listen(":" + os.Getenv("API_PORT"))
 
 }
