@@ -23,8 +23,8 @@ tmp
 go.work
 go.work.sum
 
-# env file
-#.env
+env file
+.env
 
 # Logs
 logs

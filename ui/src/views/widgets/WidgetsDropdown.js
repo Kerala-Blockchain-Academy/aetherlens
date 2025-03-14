@@ -47,7 +47,7 @@ const WidgetsDropdown = (props) => {
          "params": [],
          "id": 1
      }
-     const response = await fetch("http://127.0.0.1:8545",{
+     const response = await fetch("http://167.71.238.20:8545",{
          method: "POST",
          headers: {
            "Content-Type": "application/json",

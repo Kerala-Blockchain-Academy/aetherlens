@@ -50,7 +50,7 @@ func BlockQuery(DB *gorm.DB) {
 		if err := DB.Create(&newBlock).Error; err != nil {
 			fmt.Println("Error creating new block:", err)
 		} else {
-			fmt.Println("Block inserted successfully!")
+			fmt.Printf("Block %d inserted successfully!\n", i) 
 		}
 
 		if len(blocks.Body().Transactions) == 0 {
