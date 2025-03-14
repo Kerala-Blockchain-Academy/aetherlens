@@ -32,7 +32,8 @@ func BlockDetails(DB *gorm.DB) {
 			blocks, err := GetBlockDetails(i)
 
 			if err != nil {
-				fmt.Println("Cannot get block details")
+				fmt.Println(err)
+				continue
 			}
 			newBlock := models.Block{
 				Number:     blocks.NumberU64(),
@@ -45,7 +46,7 @@ func BlockDetails(DB *gorm.DB) {
 			if err := DB.Create(&newBlock).Error; err != nil { //Entering block details to blocks Table
 				fmt.Println("Error creating new block:", err)
 			} else {
-				fmt.Println("Block inserted successfully!")
+				fmt.Printf("Block %d inserted successfully!\n", i)
 			}
 
 			if len(blocks.Body().Transactions) == 0 { // Checking whether transactions present

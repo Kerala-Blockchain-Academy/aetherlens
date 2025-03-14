@@ -5,13 +5,13 @@ import (
 	"log"
 	"os"
 	"time"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func Connect() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("postgres://%s:%s@aetherlens-db:%s/%s", os.Getenv("PG_USER"), os.Getenv("PG_PASSWORD"), os.Getenv("PG_PORT"), os.Getenv("PG_DB"))
+	
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to DB: %w", err)
@@ -34,7 +34,7 @@ func RetryConnectDB(maxRetries int, delay time.Duration) (*gorm.DB, error) {
 		db, err = Connect()
 
 		if db != nil {
-			fmt.Println("Successfully connected to node!")
+			fmt.Println("Successfully connected to DB!")
 			return db, nil
 		}
 

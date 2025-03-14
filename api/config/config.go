@@ -17,8 +17,8 @@ func ConnectNode() (*ethclient.Client, error) {
 	// }
 	
 	url := os.Getenv("CHAIN_URL")
-	// url := "http://192.168.0.155:8545"
-
+	
+	fmt.Println(url)
 	client, err := ethclient.Dial(url)
 
 	if err != nil {

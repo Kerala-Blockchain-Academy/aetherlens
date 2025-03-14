@@ -23,3 +23,4 @@ func GetBlockDetails(i uint64) (*types.Block, error) {
 	return block, err
 
 }
+
