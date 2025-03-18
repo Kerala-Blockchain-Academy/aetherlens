@@ -3,12 +3,13 @@ package threads
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/pglekshmi/explorerGoPostgreSQL/config"
 	"github.com/pglekshmi/explorerGoPostgreSQL/controllers"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
 	"gorm.io/gorm"
-	"log"
-	"time"
 )
 
 func BlockQuery(DB *gorm.DB) {
@@ -37,7 +38,8 @@ func BlockQuery(DB *gorm.DB) {
 		blocks, err := controllers.GetBlockDetails(i)
 
 		if err != nil {
-			fmt.Println("Cannot get block details")
+			fmt.Println(err)
+				continue
 		}
 		newBlock := models.Block{
 			Number:     blocks.NumberU64(),
@@ -50,7 +52,7 @@ func BlockQuery(DB *gorm.DB) {
 		if err := DB.Create(&newBlock).Error; err != nil {
 			fmt.Println("Error creating new block:", err)
 		} else {
-			fmt.Printf("Block %d inserted successfully!\n", i) 
+			fmt.Printf("Block %d inserted successfully!\n", i)
 		}
 
 		if len(blocks.Body().Transactions) == 0 {
