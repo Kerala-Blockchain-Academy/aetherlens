@@ -3,29 +3,21 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"github.com/pglekshmi/explorerGoPostgreSQL/config"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
 	"gorm.io/gorm"
-	"time"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func BlockDetails(DB *gorm.DB) {
-	Client, err := config.RetryConnectNode(5, 2*time.Second) //Getting connection with node
-	if err != nil {
-		fmt.Println("Error in connecting to Node")
-	}
-	latestBlockNumber, err := Client.BlockNumber(context.Background()) // Get the latest block number
-	if err != nil {
-		fmt.Println("Something wrong getting data", err)
-	}
+func BlockDetails(i uint64,j uint64,DB *gorm.DB,Client *ethclient.Client) {
+	
 
 	var firstBlock models.Block
 
 	if err := DB.First(&firstBlock).Error; err != nil { //Checking whether DB is empty
-		i := uint64(0)
+		
 		for { // Getting all the blocks from 0 to latest
-			fmt.Println("latest block", latestBlockNumber)
-			if i > latestBlockNumber {
+			
+			if i >j {
 				break // Exit when i exceeds the latest block number
 			}
 
