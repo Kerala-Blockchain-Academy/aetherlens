@@ -80,6 +80,7 @@ func Get20Blocks(c *fiber.Ctx, DB *gorm.DB) error {
 func GetBlockbyNymber(c *fiber.Ctx, DB *gorm.DB) error {
 	var block []models.Block
 	blockNumberStr := c.Params("id")
+	fmt.Println(blockNumberStr)
 	blockNumber, err := strconv.ParseUint(blockNumberStr, 10, 64) //Converting String to Uint64
 	if err != nil {
 		fmt.Println("Error converting block number:", err)

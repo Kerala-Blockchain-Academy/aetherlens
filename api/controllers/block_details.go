@@ -11,9 +11,7 @@ import (
 func BlockDetails(i uint64,j uint64,DB *gorm.DB,Client *ethclient.Client) {
 	
 
-	var firstBlock models.Block
-
-	if err := DB.First(&firstBlock).Error; err != nil { //Checking whether DB is empty
+	
 		
 		for { // Getting all the blocks from 0 to latest
 			
@@ -108,6 +106,6 @@ func BlockDetails(i uint64,j uint64,DB *gorm.DB,Client *ethclient.Client) {
 			fmt.Println("All Transactions entered")
 			i++
 
-		}
+		
 	}
 }

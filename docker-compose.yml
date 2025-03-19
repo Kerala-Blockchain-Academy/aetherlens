@@ -1,3 +1,7 @@
+networks:
+  aetherlens:
+    name: aetherlens_net
+
 services:
   postgres:
     image: postgres:15
@@ -9,6 +13,8 @@ services:
       - POSTGRES_PORT=${PG_PORT}
     expose:
       - ${PG_PORT}
+    networks:
+      - aetherlens
 
   api:
     build:
@@ -27,6 +33,8 @@ services:
     ports:
       - ${API_PORT}:${API_PORT}
     entrypoint: ./main
+    networks:
+      - aetherlens
 
   ui:
     build:
@@ -40,3 +48,5 @@ services:
       - ./ui/src:/ui/src
     ports:
       - ${UI_PORT}:${UI_PORT}
+    networks:
+      - aetherlens
