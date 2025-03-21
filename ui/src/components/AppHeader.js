@@ -15,6 +15,7 @@ import {
   CNavItem,
   useColorModes,
 } from '@coreui/react'
+import { CButton, CFormInput, CInputGroup } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
   cilBell,
@@ -59,7 +60,7 @@ const AppHeader = () => {
           // console.log("hello",Number(searchInput))
           console.log(searchInput);
           
-          navigate("/blocks",{state:searchInput});
+          navigate(`/blocks/${searchInput}`);
       }
   }
 
@@ -79,93 +80,28 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
-        {/* <CHeaderNav className="d-none d-md-flex">
-          <CNavItem>
-            <CNavLink to="/dashboard" as={NavLink}>
-              Dashboard
-            </CNavLink>
-          </CNavItem> */}
-          {/* <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
-          </CNavItem> */}
-          {/* import { FaSearch } from "react-icons/fa"; */}
-{/* <CNavItem>
-
-</CNavItem>
-        </CHeaderNav> */}
-        {/* <CHeaderNav className="ms-auto">
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav> */}
+       
         <CHeaderNav>
           <CNavItem>
-          <div style={{
-    display: "flex",
-    alignItems: "center",
-    padding: "10px",
-    height: "50px", // Increased height
-    width: "400px", // Reduced width
-    fontSize: "16px",
-    background: "#222", // Slightly dark background
-    borderRadius: "10px", // Rounded corners
-    border: "1px solid #555", // Border color
-    boxShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", // 3D Effect
-    outline: "none",
-    transition: "all 0.3s ease-in-out",
-    position: "relative"
-}}>
-    {/* Input Field */}
-    <input
-        type="text"
-        id="inputField"
-        name="inputField"
-        maxLength="120"
-        placeholder="Search by Txn Hash / Block"
-        required
-        onChange={changeHandler}
-        style={{
-            flex: 1, // Takes available space
-            background: "transparent",
-            border: "none",
-            outline: "none",
-            fontSize: "16px",
-            color: "white",
-            paddingLeft: "10px", // Space from left
-            paddingRight: "40px", // Space for icon on right
-        }}
-    />
-
-    {/* Search Icon on the Right */}
-    <CIcon 
+            <CInputGroup></CInputGroup>
+          
+            <CInputGroup className="mb-3 mt-4" size="lg">
+        <CFormInput
+          placeholder="Search using BlockNumber"
+          aria-label="Recipient's username"
+          aria-describedby="button-addon2"
+          onChange={changeHandler}
+        />
+        <CButton type="button" color="secondary" variant="outline" id="button-addon2">
+        <CIcon 
         icon={cilZoom} 
         height={20} 
         onClick={handleSearch}
-        style={{ 
-            color: "white", 
-            position: "absolute", 
-            right: "10px" // Moves icon to the right
-        }} 
+       
         
     />
-        
-
-</div>
+        </CButton>
+      </CInputGroup>
 
 
 

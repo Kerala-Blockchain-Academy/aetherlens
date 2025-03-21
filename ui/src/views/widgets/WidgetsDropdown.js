@@ -21,6 +21,10 @@ const WidgetsDropdown = (props) => {
   const widgetChartRef1 = useRef(null)
   const widgetChartRef2 = useRef(null)
 
+  // const url = import.meta.env.VITE_APP_CHAIN_URL
+  // console.log(url);
+  
+
   useEffect(() => {
     document.documentElement.addEventListener('ColorSchemeChange', () => {
       if (widgetChartRef1.current) {
@@ -41,26 +45,13 @@ const WidgetsDropdown = (props) => {
 
   useEffect(()=>{
     async function fetchLatestBlock(){
-     const data = {
-         "jsonrpc": "2.0",
-         "method": "eth_blockNumber",
-         "params": [],
-         "id": 1
-     }
-     const response = await fetch("http://167.71.238.20:8545",{
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-         },
-         body: JSON.stringify(data),
-       }            
-
-     )
+    
+     const response = await fetch("http://127.0.0.1:8080/latestBlock" )
      const blk= await response.json()
-     console.log("Latest",parseInt(blk.result,16));
+     console.log("Latest",blk);
      
      if(blk!=null){
-         setLatestBlock(parseInt(blk.result,16))
+         setLatestBlock(blk)
      }
      else{
          console.log("Error Fetching block");
@@ -73,7 +64,7 @@ const WidgetsDropdown = (props) => {
   console.log("hello");
 
 const response = await fetch("http://127.0.0.1:8080/transCount")
-console.log("hi");
+console.log("hi",response);
 
 const trans= await response.json()
 console.log("Latest",trans);
@@ -115,15 +106,16 @@ fetchTotalTrans();
 
   return (
     <CRow className={props.className} xs={{ gutter: 4 }}>
+      
      
       <CCol sm={6} xl={4} xxl={3}>
       <CWidgetStatsF
-            className="mb-3"
-            style={{ height: "150px" }}
+            className="mb-3 "
             color="primary"
             icon={<CIcon icon={cil3d} height={40} />}
-            title={<span style={{ fontSize: "20px",color:"white" }}>Latest Block</span>}
-            value={<span style={{ fontSize: "30px",color:"white" }}>{latestBlock}</span>}
+            title={<span style={{ fontSize:'17px' }}>Latest Block</span>}
+
+            value={<span style={{ fontSize:'30px' }}>{latestBlock}</span>}
           />   
       </CCol>
 
@@ -133,8 +125,8 @@ fetchTotalTrans();
             // style={{ height: "150px" }}
             color="primary"
             icon={<CIcon icon={cilListRich} height={40} />}
-            title={<span style={{ fontSize: "20px",color:"white" }}>Transaction Count</span>}
-            value={<span style={{ fontSize: "30px",color:"white" }}>{totalTransCount}</span>}
+            title={<span style={{ fontSize:'17px' }}>Transaction Count</span>}
+            value={<span style={{ fontSize:'30px' }}>{totalTransCount}</span>}
           />   
       </CCol>
 
@@ -144,8 +136,8 @@ fetchTotalTrans();
             // style={{ height: "150px" }}
             color="primary"
             icon={<CIcon icon={cilFile} height={40} />}
-            title={<span style={{ fontSize: "20px",color:"white" }}>Contract Created</span>}
-            value={<span style={{ fontSize: "30px",color:"white" }}>{totalContractCount}</span>}
+            title={<span style={{ fontSize: "17px" }}>Contract Created</span>}
+            value={<span style={{ fontSize: "30px" }}>{totalContractCount}</span>}
           />   
       </CCol>
 
