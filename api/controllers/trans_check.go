@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 )
@@ -36,4 +38,12 @@ func TransValueCheck(k *types.Transaction) string {
 		return "0x0"
 	}
 	return k.Value().String()
+}
+
+func TransFromCheck(sender common.Address)string{
+	
+	if(sender== common.Address{}){
+		return "0x0"
+	}
+	return sender.String()
 }

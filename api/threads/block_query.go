@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/pglekshmi/explorerGoPostgreSQL/config"
 	"github.com/pglekshmi/explorerGoPostgreSQL/controllers"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
@@ -66,7 +67,13 @@ func BlockQuery(DB *gorm.DB) {
 
 		for _, k := range blocks.Body().Transactions {
 
+			chainId := k.ChainId()
+
+			Sender,_:= types.Sender(types.LatestSignerForChainID(chainId),k)
+			
+
 			toAddress := controllers.TransAddressCheck(k)
+			fromAddr := controllers.TransFromCheck(Sender)
 			tHash := controllers.TransHashCheck(k)
 			tType := controllers.TransTypeCheck(k)
 			tValue := controllers.TransValueCheck(k)
@@ -98,7 +105,7 @@ func BlockQuery(DB *gorm.DB) {
 				Thash: tHash,
 				// To:blocks.Body().Transactions[k].To().Hex(),
 				To: toAddress,
-
+				From:        fromAddr,
 				Type:        tType,
 				Gas:         k.Gas(),
 				Value:       tValue,

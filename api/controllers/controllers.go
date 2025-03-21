@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-	"time"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
 	"gorm.io/gorm"
+	"net/http"
+	"strconv"
+	"time"
 )
 
 type DailyCount struct {
@@ -41,7 +41,6 @@ func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	}
 	return c.Status(http.StatusOK).JSON(&results)
 
-	
 }
 
 func GetlasttenCount(c *fiber.Ctx, DB *gorm.DB) error {
@@ -78,7 +77,7 @@ func Get20Blocks(c *fiber.Ctx, DB *gorm.DB) error {
 }
 
 func GetBlockbyNymber(c *fiber.Ctx, DB *gorm.DB) error {
-	var block []models.Block
+	var block models.Block
 	blockNumberStr := c.Params("id")
 	fmt.Println(blockNumberStr)
 	blockNumber, err := strconv.ParseUint(blockNumberStr, 10, 64) //Converting String to Uint64
@@ -92,6 +91,7 @@ func GetBlockbyNymber(c *fiber.Ctx, DB *gorm.DB) error {
 	if err := result.Error; err != nil {
 		return err
 	}
+	fmt.Println(block)
 	return c.Status(http.StatusOK).JSON(&block)
 }
 
@@ -116,7 +116,7 @@ func GetTransbyHash(c *fiber.Ctx, DB *gorm.DB) error {
 	return c.Status(http.StatusOK).JSON(&tbyhash)
 }
 
-func GetTransbyBlock(c *fiber.Ctx, DB *gorm.DB) error{
+func GetTransbyBlock(c *fiber.Ctx, DB *gorm.DB) error {
 	var tbyblock []models.Transaction
 	blockNumber := c.Params("id")
 	result := DB.Where("BlockNumber = ?", blockNumber).Find(&tbyblock) // SELECT * FROM bloc WHERE block_number = ?;
@@ -150,11 +150,52 @@ func GetContractCount(c *fiber.Ctx, DB *gorm.DB) error {
 
 func GettenBlockDetails(c *fiber.Ctx, DB *gorm.DB) error {
 	var blocks []models.Block
-result := DB.Order("number DESC").Limit(10).Find(&blocks)
+	result := DB.Order("number DESC").Limit(10).Find(&blocks)
 
-if result.Error != nil {
-    return result.Error
-} else {
-    return c.Status(http.StatusOK).JSON(&blocks)
+	if result.Error != nil {
+		return result.Error
+	} else {
+		return c.Status(http.StatusOK).JSON(&blocks)
+	}
 }
+
+func TxCountbyNumber(c *fiber.Ctx, DB *gorm.DB) error {
+	blockNumber := c.Params("id")
+	var txCount int64
+
+	result := DB.Table("trans_counts").Select("count").Where("block_number = ?", blockNumber).Scan(&txCount)
+	fmt.Printf("Count %d", txCount)
+
+	if result.Error != nil {
+		return result.Error
+	} else {
+		return c.Status(http.StatusOK).JSON(&txCount)
+	}
+
+}
+
+func TxByNumber(c *fiber.Ctx, DB *gorm.DB) error {
+	blockNumber := c.Params("id")
+	fmt.Printf("block%v", blockNumber)
+	var txDetails []models.Transaction
+
+	result := DB.Table("transactions").Select("*").Where("block_number = ?", blockNumber).Scan(&txDetails)
+	fmt.Printf("tx %v", txDetails)
+
+	if result.Error != nil {
+		return result.Error
+	} else {
+		return c.Status(http.StatusOK).JSON(&txDetails)
+	}
+
+}
+
+func GetLatestBlock(c *fiber.Ctx, DB *gorm.DB) error {
+	var maxBlockNumber uint64
+	result := DB.Table("blocks").Select("MAX(Number)").Scan(&maxBlockNumber)
+	if result.Error != nil {
+		return result.Error
+	} else {
+		return c.Status(http.StatusOK).JSON(&maxBlockNumber)
+	}
 }
