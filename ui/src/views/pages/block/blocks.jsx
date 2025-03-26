@@ -30,6 +30,7 @@ function blocks() {
     console.log(res);
     
     let lblk;
+    
     lblk = await res.json();
     console.log(lblk);
     
@@ -136,7 +137,7 @@ const handleCopy = async (text) => {
     },
   ]
 
-  
+
     
   
 //   const navigate = useNavigate();
@@ -148,6 +149,7 @@ const handleCopy = async (text) => {
 //  lblk.forEach(element => {
     
 //  });
+
  
   return (
 
@@ -164,6 +166,7 @@ const handleCopy = async (text) => {
     </div>
     </div>
    )
+   
 //   }
 
 }

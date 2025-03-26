@@ -18,6 +18,7 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 const Block = React.lazy(()=>import('./views/pages/block/blocks'))
 const TransX = React.lazy(()=>import('./views/pages/block/transactions'))
+const TxInput = React.lazy(()=>import('./views/pages/block/txinput'))
 
 const App = () => {
   const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
@@ -55,6 +56,8 @@ const App = () => {
           <Route path="/blocks" element={<DefaultLayout />} />
           <Route exact path="/trxns/:id" name="Transactions" element={<TransX/>} />
           <Route path="/trxns" element={<DefaultLayout />} />
+          <Route exact path="/trxInput/:id" name="TxInput" element={<TxInput/>} />
+          <Route path="/trxInput" element={<DefaultLayout />} />
 
           <Route path="*" name="Home" element={<DefaultLayout />} />
         </Routes>

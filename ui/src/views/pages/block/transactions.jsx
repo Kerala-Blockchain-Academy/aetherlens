@@ -11,15 +11,6 @@ function transactions() {
   const blk = useParams()
   console.log(blk);
   
-  // const[txDetails,setTxDetails]=useState([{
-  //                                               blocknumber:"",
-  //                                               txhash:"",
-  //                                               type:"",
-  //                                               to:"",
-  //                                               gas:"",
-  //                                               value:"",
-  //                                               time:""
-  //                                               }])  
   const[txDetails,setTxDetails]=useState([])
   useEffect(() => { TxD() }, []);
   async function TxD() {
@@ -36,23 +27,6 @@ function transactions() {
       setTxDetails(lblk) 
     
 }
-// const shortenHash = (hash) => {
-//   if (!hash) return '';
-//   return `${hash.slice(0, 6)}...${hash.slice(-6)}`;
-// };
-
-// const handleCopy = async (text) => {
-//   if (document.hasFocus()) {
-//     try {
-//       await navigator.clipboard.writeText(text);
-//       alert('Copied to clipboard!');
-//     } catch (err) {
-//       console.error('Failed to copy:', err);
-//     }
-//   } else {
-//     alert('Please focus the page and try again.');
-//   }
-// };
 
 
 
@@ -120,7 +94,7 @@ function transactions() {
     TxHash:<div>{shortenHash(x.Hash)} <CIcon icon={cilClone} onClick={()=>{handleCopy(blockDetails.blockhash)}} height={15} /></div>,
     From:<div>{shortenHash(x.From)} <CIcon icon={cilClone} onClick={()=>{handleCopy(blockDetails.blockhash)}} height={15} /></div>,
     To: <div>{shortenHash(x.To)} <CIcon icon={cilClone} onClick={()=>{handleCopy(blockDetails.blockhash)}} height={15} /></div>,
-    InputData:<Link>View Data</Link>,
+    InputData:<Link to={`/trxInput/${x.Hash}`}>View Data</Link>,
     Value:x.Value,
     _cellProps: { id: { scope: 'row' } },
   },
