@@ -88,6 +88,9 @@ export default function txInput() {
           if (typeof value === 'bigint') {
             value = value.toString();
           }
+          else if(Array.isArray(value)){
+            value = JSON.parse(value)
+          }
           inputData[`args${index}`] = value;
         }
 
@@ -101,47 +104,18 @@ export default function txInput() {
   let PrettyPrintJson;
   useEffect(() => {
     function displayInput() {
-      console.log(txOutput);
+      console.log(typeof txOutput);
 
       const element = document.getElementById("decodedJson");
       if (element && txOutput) {
         
-        // const jsonString = JSON.stringify(txOutput);
-
-
-        // Optional: Simple inline syntax highlight (basic)
-      //   const highlighted = jsonString
-      //     .replace(/("(.*?)")(?=:)/g, '<span style="color: #c92c2c;">$1</span>') // keys
-      //     .replace(/: "(.*?)"/g, ': <span style="color: #2f9c0a;">"$1"</span>') // string values
-      //     .replace(/: (\d+)/g, ': <span style="color: #1c7ed6;">$1</span>'); // number values
-
-      //   element.innerHTML = `<code>${highlighted}</code>`;
-      // }
-
-      // const element = document.getElementById("exampleFormControlTextarea2")
-      // PrettyPrintJson = JSON.stringify(txOutput,null,2)
-      // console.log(PrettyPrintJson);
-      const dataStr = JSON.stringify(txOutput)
-      element.innerHTML = prettyPrintJson(txOutput)
+      
+      const dataStr = JSON.stringify(txOutput,null,2)
+      element.innerHTML = dataStr
+      element.value = dataStr
       console.log(element.value);
 
-    }}
-    function prettyPrintJson(obj) {
-      const jsonString = JSON.stringify(obj, null, 2);
-    
-      return jsonString
-        .replace(/("(.*?)")(?=:)/g, '<span style="color: #c92c2c;">$1</span>') // keys
-        .replace(/: "(.*?)"/g, ': <span style="color: #2f9c0a;">"$1"</span>') // string values
-        .replace(/: (\d+)/g, ': <span style="color: #1c7ed6;">$1</span>') // number values
-        .replace(/: (\[.*?\])/gs, (match, group) => {
-          // Recursively format nested arrays
-          try {
-            const parsed = JSON.parse(group);
-            return `: <span style="color: #845ef7;">${JSON.stringify(parsed, null, 2)}</span>`;
-          } catch {
-            return match;
-          }
-        });
+    }
     }
     displayInput()
   }, [txOutput])
