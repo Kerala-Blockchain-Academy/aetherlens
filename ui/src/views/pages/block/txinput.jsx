@@ -105,7 +105,10 @@ export default function txInput() {
 
       const element = document.getElementById("decodedJson");
       if (element && txOutput) {
-        const jsonString = JSON.stringify(txOutput, null, 2);
+        const jsonP = JSON.stringify(txOutput);
+        const jsonS = JSON.parse(jsonP);
+        const jsonString = JSON.stringify(jsonS,null,2)
+
 
         // Optional: Simple inline syntax highlight (basic)
         const highlighted = jsonString
