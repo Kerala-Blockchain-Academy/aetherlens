@@ -2,14 +2,15 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import {
+  CCardTitle,
   CCloseButton,
   CSidebar,
   CSidebarBrand,
   CSidebarFooter,
   CSidebarHeader,
-  CSidebarToggler,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { cilZoom } from '@coreui/icons'
 
 import { AppSidebarNav } from './AppSidebarNav'
 
@@ -36,21 +37,16 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarHeader className="border-bottom">
-        <CSidebarBrand to="/">
-          <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} />
-          <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
+        <CSidebarBrand to="/" className="d-flex align-items-center gap-2 text-decoration-none">
+          <CIcon customClassName="sidebar-brand-full" icon={cilZoom} height={32} />
+          <span className="fw-bold">AetherLens</span>
         </CSidebarBrand>
-        <CCloseButton
-          className="d-lg-none"
-          dark
-          onClick={() => dispatch({ type: 'set', sidebarShow: false })}
-        />
       </CSidebarHeader>
       <AppSidebarNav items={navigation} />
       <CSidebarFooter className="border-top d-none d-lg-flex">
-        <CSidebarToggler
+        {/* <CSidebarToggler
           onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-        />
+        /> */}
       </CSidebarFooter>
     </CSidebar>
   )

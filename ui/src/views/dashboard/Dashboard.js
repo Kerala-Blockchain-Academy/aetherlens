@@ -19,14 +19,14 @@ import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
   const navigate = useNavigate();
- 
- 
-  const[stateChart,setStateChart]=useState("Today");
-  function handleNavigate(value){
-    if(value == "Today"){
+
+
+  const [stateChart, setStateChart] = useState("Today");
+  function handleNavigate(value) {
+    if (value == "Today") {
       navigate('/MainChart')
     }
-    else{
+    else {
       navigate('/SubChart')
     }
   }
@@ -53,7 +53,7 @@ const Dashboard = () => {
                     key={value}
                     className="mx-0"
                     active={value == stateChart}
-                    onClick={()=>{setStateChart(value)}}
+                    onClick={() => { setStateChart(value) }}
                   >
                     {value}
                   </CButton>
@@ -63,10 +63,10 @@ const Dashboard = () => {
           </CRow>
           {stateChart === "Today" ? <MainChart /> : <SubChart />}
         </CCardBody>
-       
+
       </CCard>
-     
-      
+
+
     </>
   )
 }

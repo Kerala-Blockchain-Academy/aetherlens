@@ -17,7 +17,7 @@
     "lint": "eslint",
     "serve": "vite preview",
     "start": "vite",
-     "fmt": "prettier . --write"
+    "fmt": "prettier . --write"
   },
   "dependencies": {
     "@coreui/chartjs": "^4.1.0",
@@ -33,6 +33,7 @@
     "classnames": "^2.5.1",
     "core-js": "^3.40.0",
     "dayjs": "^1.11.13",
+    "ethers": "^6.13.5",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
