@@ -103,11 +103,26 @@ export default function txInput() {
     function displayInput() {
       console.log(txOutput);
 
-      const element = document.getElementById("exampleFormControlTextarea2")
+      const element = document.getElementById("decodedJson");
+      if (element && txOutput) {
+        const jsonString = JSON.stringify(txOutput, null, 2);
+
+        // Optional: Simple inline syntax highlight (basic)
+        const highlighted = jsonString
+          .replace(/("(.*?)")(?=:)/g, '<span style="color: #c92c2c;">$1</span>') // keys
+          .replace(/: "(.*?)"/g, ': <span style="color: #2f9c0a;">"$1"</span>') // string values
+          .replace(/: (\d+)/g, ': <span style="color: #1c7ed6;">$1</span>'); // number values
+
+        element.innerHTML = `<code>${highlighted}</code>`;
+      }
+
+      // const element = document.getElementById("exampleFormControlTextarea2")
       // PrettyPrintJson = JSON.stringify(txOutput,null,2)
       // console.log(PrettyPrintJson);
+      // const dataStr = JSON.stringify(txOutput)
+      // element.innerHTML = JSON.stringify(txOutput, null, 2)
+      // console.log(element.value);
 
-      element.value = JSON.stringify(txOutput, null, 2)
     }
     displayInput()
   }, [txOutput])
@@ -143,7 +158,10 @@ export default function txInput() {
 
           <div className="col-md-4 mb-3">
             <CFormLabel htmlFor="exampleFormControlTextarea2">Decoded Data</CFormLabel>
-            <CFormTextarea id="exampleFormControlTextarea2" rows={20} aria-label="readonly input example" readOnly />
+            {/* <CFormTextarea id="exampleFormControlTextarea2" rows={20} aria-label="readonly input example" readOnly /> */}
+            <div className="border rounded p-3 bg-transparent text-light" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+              <pre id="decodedJson" className="mb-0" style={{ whiteSpace: 'pre-wrap' }}></pre>
+            </div>
           </div>
         </div>
       </div>
