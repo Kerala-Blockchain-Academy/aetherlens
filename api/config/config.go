@@ -20,6 +20,7 @@ func ConnectNode() (*ethclient.Client, error) {
 	
 	fmt.Println(url)
 	client, err := ethclient.Dial(url)
+	fmt.Println(err)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to Ethereum node: %w", err)

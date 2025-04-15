@@ -31,6 +31,7 @@ func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 		Group("date_trunc('hour', to_timestamp(timestamp))").
 		Order("date_trunc('hour', to_timestamp(timestamp))").
 		Scan(&results)
+		fmt.Println(results)
 
 	if err := tx.Error; err != nil {
 		return err
@@ -197,5 +198,45 @@ func GetLatestBlock(c *fiber.Ctx, DB *gorm.DB) error {
 		return result.Error
 	} else {
 		return c.Status(http.StatusOK).JSON(&maxBlockNumber)
+	}
+}
+
+func GetTxPresent(c *fiber.Ctx, DB *gorm.DB) error{
+	txHash := c.Params("id")
+	var count int64
+	err := DB.Table("transactions").Where("thash = ?", txHash).Count(&count).Error
+
+	if err!=nil{
+		return err
+	}else if count>0{
+		return c.Status(http.StatusOK).JSON(&count)
+	}else{
+		return c.Status(http.StatusNotFound).JSON(&count)
+	}
+}
+
+func GetAllContracts(c *fiber.Ctx, DB *gorm.DB)error{
+	var contracts []models.Contract_call
+	result := DB.Find(&contracts)
+
+	if(result.Error!=nil){
+		return result.Error
+	} else {
+		return c.Status(http.StatusOK).JSON(&contracts)
+	}
+}
+
+func GetAllContractTx(c *fiber.Ctx, DB *gorm.DB) error{
+	cAddr := c.Params("id")
+	fmt.Println(cAddr)
+	var contractTx []models.Transaction
+	result := DB.Where("to_address = ?",cAddr).Order("time DESC").Limit(100).Find(&contractTx)
+	// result := DB.Table("transactions").Select("*").Where("to=?", cAddr).Scan(&contractTx)
+	fmt.Println(contractTx)
+
+	if result.Error != nil{
+		return result.Error
+	} else{
+		return c.Status(http.StatusOK).JSON(&contractTx)
 	}
 }

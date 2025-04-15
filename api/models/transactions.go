@@ -7,9 +7,9 @@ import (
 
 type Transaction struct{
 	gorm.Model
-	Thash string `json:"Hash" gorm:"primaryKey"`
-	To string `json:"To"`
-	From string `json:"From"`
+	Thash string `json:"Hash"`
+	ToAddress string `json:"To"`
+	FromAddress string `json:"From"`
 	Type uint8 `json:"Type"`
 	Gas uint64 `json:"Gas"`
 	Value string `json:"Value"`

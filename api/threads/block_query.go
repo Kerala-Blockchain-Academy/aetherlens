@@ -104,8 +104,8 @@ func BlockQuery(DB *gorm.DB) {
 			newTransaction := models.Transaction{
 				Thash: tHash,
 				// To:blocks.Body().Transactions[k].To().Hex(),
-				To: toAddress,
-				From:        fromAddr,
+				ToAddress: toAddress,
+				FromAddress:        fromAddr,
 				Type:        tType,
 				Gas:         k.Gas(),
 				Value:       tValue,

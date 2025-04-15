@@ -94,8 +94,8 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 
 			newTransaction := models.Transaction{
 				Thash:       tHash,
-				To:          toAddress,
-				From:        fromAddr,
+				ToAddress:          toAddress,
+				FromAddress:        fromAddr,
 				Type:        tType,
 				Gas:         k.Gas(),
 				Value:       tValue,
