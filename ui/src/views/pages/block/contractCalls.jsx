@@ -9,6 +9,7 @@ import { CTable } from '@coreui/react'
 function contractCalls() {
   console.log("Hello");
   const [contractCalls, setContractCalls] = useState([])
+  const [items, setItems] = useState([])
   useEffect(() => { ContractCall() }, []);
   async function ContractCall() {
 
@@ -27,7 +28,7 @@ function contractCalls() {
 
 
 
-//   console.log(txDetails);
+  //   console.log(txDetails);
   const columns = [
     {
       key: 'id',
@@ -43,36 +44,76 @@ function contractCalls() {
       label: 'Calls',
       _props: { scope: 'col' },
     },
-  
-   
-   
+
+
+
   ]
 
-  let items = [];
+
 
   let c = 1;
-  
+  useEffect(() => {
+    const newItems = []
+    function ContractDetailsFn() {
+      console.log(contractCalls);
+      console.log(typeof items);
+      // let k=0;
+      // txDetails.map(x=>{
+      //   console.log(x);
+      //   k++;
+      // })
+      // console.log(k);
 
-  contractCalls.forEach(x => {
+      contractCalls.forEach(x => {
+
+        console.log(x);
+
+        let itemDetails =
+        {
+          id: c,
+          ContractAccount: <div>{x.Address}</div>,
+          Calls: <Link to={`/contractTrxs/${x.Address}`} >{x.Call}</Link>,
+          // To: <div>{shortenHash(x.To)} <CIcon icon={cilClone} onClick={() => { handleCopy(blockDetails.blockhash) }} height={15} /></div>,
+          // InputData: <Link to={`/trxInput/${x.Hash}`}>View Data</Link>,
+          // Value: x.Value,
+          _cellProps: { id: { scope: 'row' } },
+        }
+
+        console.log(itemDetails);
+
+        newItems.push(itemDetails)
+        setItems(newItems)
+        c++;
+
+      });
+      console.log(items);
 
 
-    items = [
-      {
-        id: c,
-        ContractAccount: <div>{x.Address}</div>,
-        Calls: <Link to={`/contractTrxs/${x.Address}`} >{x.Call}</Link>,
-        // To: <div>{shortenHash(x.To)} <CIcon icon={cilClone} onClick={() => { handleCopy(blockDetails.blockhash) }} height={15} /></div>,
-        // InputData: <Link to={`/trxInput/${x.Hash}`}>View Data</Link>,
-        // Value: x.Value,
-        _cellProps: { id: { scope: 'row' } },
-      },
+    }
+    ContractDetailsFn()
+  }, [contractCalls])
+
+
+  // contractCalls.forEach(x => {
+
+
+  //   items = [
+  //     {
+  //       id: c,
+  //       ContractAccount: <div>{x.Address}</div>,
+  //       Calls: <Link to={`/contractTrxs/${x.Address}`} >{x.Call}</Link>,
+  //       // To: <div>{shortenHash(x.To)} <CIcon icon={cilClone} onClick={() => { handleCopy(blockDetails.blockhash) }} height={15} /></div>,
+  //       // InputData: <Link to={`/trxInput/${x.Hash}`}>View Data</Link>,
+  //       // Value: x.Value,
+  //       _cellProps: { id: { scope: 'row' } },
+  //     },
 
 
 
-    ]
-    c++;
+  //   ]
+  //   c++;
 
-  });
+  // });
 
   return (
     <div>
