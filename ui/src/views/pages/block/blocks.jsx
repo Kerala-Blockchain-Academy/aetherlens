@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { AppContent, AppSidebar, AppFooter, PageHeader } from 'src/components/index'
 // import styles from "./style/Home.module.css";
+
 import { useNavigate } from "react-router-dom";
 import CIcon from '@coreui/icons-react'
 import { cilClone } from '@coreui/icons'
 import { CTable } from '@coreui/react'
 function blocks() {
+   const navigate = useNavigate();
   console.log("Hello");
   const blk = useParams()
   console.log(blk);
@@ -32,7 +34,10 @@ function blocks() {
     let lblk;
 
     lblk = await res.json();
-    console.log(lblk);
+    console.log(lblk.ID);
+    if(lblk.ID==0){
+      navigate('/404')
+    }
 
 
     let result = await fetch(`http://127.0.0.1:8080/txCountbyNumber/${blk.id}`)

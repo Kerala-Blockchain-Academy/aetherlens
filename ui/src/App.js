@@ -20,6 +20,8 @@ const Block = React.lazy(() => import('./views/pages/block/blocks'))
 const BlkTx = React.lazy(() => import('./views/pages/block/blockDetails'))
 const TransX = React.lazy(() => import('./views/pages/block/transactions'))
 const TxInput = React.lazy(() => import('./views/pages/block/txinput'))
+const ContractCall = React.lazy(() => import('./views/pages/block/contractCalls'))
+const ContractTrxns = React.lazy(() => import('./views/pages/block/contractTxns'))
 
 const App = () => {
   const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
@@ -60,6 +62,10 @@ const App = () => {
           <Route exact path="/trxInput/:id" name="TxInput" element={<TxInput />} />
           <Route path="/trxInput" element={<DefaultLayout />} />
           <Route path="/blkTx" element={<BlkTx />} />
+          <Route path="/contracts" element={<ContractCall />} />
+          <Route exact path="/contractTrxs/:id" name="ContractTrxns" element={<ContractTrxns />} />
+          <Route path="/contractTrxs" element={<DefaultLayout />} />
+
 
           <Route path="*" name="Home" element={<DefaultLayout />} />
         </Routes>

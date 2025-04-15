@@ -12,7 +12,7 @@ import {
   CNavItem,
   useColorModes,
 } from '@coreui/react'
-import { CButton, CFormInput, CInputGroup } from '@coreui/react'
+import { CButton, CFormInput, CInputGroup,CSpinner } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
   cilMoon,
@@ -32,10 +32,12 @@ const AppHeader = () => {
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
   const [searchInput, setSearchInput] = useState("");
+  const [loading,setLoading] = useState(false)
   async function changeHandler(e) {
     setSearchInput(e.target.value);
   };
   async function handleSearch() {
+
     console.log(searchInput);
 
     console.log(searchInput.length)
@@ -50,7 +52,15 @@ const AppHeader = () => {
 
       // console.log("hello",Number(searchInput))
       console.log(searchInput);
-
+      setLoading(true);
+      setTimeout(() => setLoading(false), 2000);
+      const response = await fetch(`http://127.0.0.1:8080/txPresent/${searchInput}`)
+      const res = await response.json()
+      console.log(res);
+      if(res){
+        navigate('/404')
+      }
+      
       navigate(`/blocks/${searchInput}`);
     }
   }
@@ -108,6 +118,7 @@ const AppHeader = () => {
                 variant="outline"
                 id="button-addon2"
                 onClick={handleSearch}
+                disabled={loading}
                 style={{
                   border: "none", // Removes borders
                   borderTopRightRadius: "50px",
@@ -118,7 +129,10 @@ const AppHeader = () => {
                   justifyContent: "center",
                 }}
               >
-                <CIcon icon={cilZoom} height={20} />
+                 {loading ? (
+        <CSpinner component="span" size="sm" aria-hidden="true" />
+      ) :
+                <CIcon icon={cilZoom} height={20} />}
               </CButton>
             </CInputGroup>
 

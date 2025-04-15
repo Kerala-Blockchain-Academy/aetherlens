@@ -43,9 +43,7 @@ const Dashboard = () => {
               <div className="small text-body-secondary">Today</div>
             </CCol>
             <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
-                <CIcon icon={cilCloudDownload} />
-              </CButton>
+               
               <CButtonGroup className="float-end me-3">
                 {['Last 10days', 'Today'].map((value) => (
                   <CButton

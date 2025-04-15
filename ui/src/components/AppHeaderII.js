@@ -43,6 +43,7 @@ const AppHeader2 = () => {
         <CHeaderToggler>
 
         </CHeaderToggler>
+        <h1 style={{ color: '#48A6A7' }}>Input Data</h1>
 
 
         <CHeaderNav>

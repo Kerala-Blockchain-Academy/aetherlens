@@ -6,17 +6,18 @@ import { useNavigate } from "react-router-dom";
 import CIcon from '@coreui/icons-react'
 import { cilClone } from '@coreui/icons'
 import { CTable } from '@coreui/react'
-function transactions() {
+function contractTxns() {
   console.log("Hello");
-  const blk = useParams()
-  console.log(blk);
+  const cAddress = useParams()
+  console.log(cAddress.id);
 
+  const [items, setItems] = useState([])
   const [txDetails, setTxDetails] = useState([])
-  const [items,setItems]=useState([])
   useEffect(() => { TxD() }, []);
   async function TxD() {
+    console.log("HEEELoo");
 
-    let res = await fetch(`http://127.0.0.1:8080/txByNumber/${blk.id}`, {
+    let res = await fetch(`http://127.0.0.1:8080/contractTx/${cAddress.id}`, {
       method: "GET",
       redirect: "follow"
     })
@@ -64,8 +65,6 @@ function transactions() {
     },
   ]
 
-  
-
   let c = 1;
   const shortenHash = (hash) => {
     if (!hash) return '';
@@ -85,23 +84,23 @@ function transactions() {
     }
   };
 
- useEffect(()=>{
-  const newItems=[]
-  function txDetailsFn(){
-    console.log(txDetails);
-    console.log(typeof items);
-    // let k=0;
-    // txDetails.map(x=>{
-    //   console.log(x);
-    //   k++;
-    // })
-    // console.log(k);
-    
-    txDetails.forEach(x => {
+  useEffect(() => {
+    const newItems = []
+    function txDetailsFn() {
+      console.log(txDetails);
+      console.log(typeof items);
+      // let k=0;
+      // txDetails.map(x=>{
+      //   console.log(x);
+      //   k++;
+      // })
+      // console.log(k);
 
-      console.log(x);
-      
-      let itemDetails =
+      txDetails.forEach(x => {
+
+        console.log(x);
+
+        let itemDetails =
         {
           id: c,
           TxHash: <div>{shortenHash(x.Hash)} <CIcon icon={cilClone} onClick={() => { handleCopy(blockDetails.blockhash) }} height={15} /></div>,
@@ -111,21 +110,21 @@ function transactions() {
           Value: x.Value,
           _cellProps: { id: { scope: 'row' } },
         }
-  
+
         console.log(itemDetails);
-        
+
         newItems.push(itemDetails)
-      setItems(newItems)
-      c++;
-  
-    });
-    console.log(items);
-    
-  
-  }
-  txDetailsFn()
- },[txDetails])
-  
+        setItems(newItems)
+        c++;
+
+      });
+      console.log(items);
+
+
+    }
+    txDetailsFn()
+  }, [txDetails])
+
   return (
     <div>
       <AppSidebar />
@@ -141,5 +140,6 @@ function transactions() {
     </div>
   )
 
+
 }
-export default transactions;
+export default contractTxns;
