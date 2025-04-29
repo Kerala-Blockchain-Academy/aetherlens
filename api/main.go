@@ -41,7 +41,7 @@ func main() {
 			return controllers.GetAllContracts(c, DB)
 		})
 
-		app.Get("/today", func(c *fiber.Ctx) error { // Today's hourly Transaction count
+		app.Get("/tooDay", func(c *fiber.Ctx) error { // Today's hourly Transaction count
 			return controllers.GetdailyCount(c, DB)
 		})
 
