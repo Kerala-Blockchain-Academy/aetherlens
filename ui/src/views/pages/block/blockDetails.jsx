@@ -11,7 +11,7 @@ export default function blkDetails() {
     const [searchInput, setSearchInput] = useState("");
     const [txInput, setTxInput] = useState("");
     const [txOutput, setTxOutput] = useState({});
-    const [abi, setAbi] = useState([])
+    const [abi, setAbi] = useState({})
 
     useEffect(() => {
         setAbi([])
@@ -43,12 +43,15 @@ export default function blkDetails() {
         let lblk = [];
         lblk = await res.json();
         console.log(lblk);
-
+        if(lblk==null){
+            
+        }
         lblk.forEach(x => {
             console.log(x.Hash);
 
             const hush = shortenHash(x.Hash)
             const bElement = document.createElement("Button");
+            
             bElement.value = x.Hash
             bElement.textContent = hush
             bElement.style.padding = "10px 20px";  // Adjust padding (size)
@@ -139,34 +142,127 @@ export default function blkDetails() {
     }
 
     function handleFileChange(e) {
-        const file = e.target.files[0]; // Get the selected file
+        const file = e.target.files[0];
         if (!file) return;
-
+    
         const reader = new FileReader();
-        reader.readAsText(file); // Read file as text
+        reader.readAsText(file);
 
         reader.onload = (e) => {
-            const abiArray = []
-            abiArray.push(e.target.result)
-            setAbi(abiArray); // Save file content to state
-        };
+            const readArray=[]
+            try {
+                let rawText = e.target.result;
+    
+                // Strip BOM if exists
+                // if (rawText.charCodeAt(0) === 0xFEFF) {
+                //     rawText = rawText.slice(1);
+                // }
 
-        reader.onerror = (e) => {
-            console.error("File reading error:", e);
+                // rawText = rawText
+                // .replace(/[\u00A0]/g, ' ')   // Replace non-breaking spaces with space
+                // .replace(/\r/g, '')          // Remove carriage returns
+                // .replace(/\t/g, '')          // Remove tabs
+                // .replace(/^\s+|\s+$/g, '');  // Trim leading/trailing whitespace
+    
+                const parsedAbi = JSON.stringify(rawText);
+                console.log(parsedAbi);
+                const parsedAbiJson = JSON.parse(parsedAbi)
+                console.log(parsedAbiJson);
+                const abiData = {
+                    "abi":[parsedAbiJson]
+                }
+                console.log(abiData);
+                
+                // readArray.push(JSON.parse(parsedAbi))
+                // console.log(readArray);
+                // setAbi(parsedAbiJson)
+                
+                // if (Array.isArray(parsedAbi)) {
+                //     // ✅ ABI is correctly formatted as an array
+                //     setAbi(parsedAbi);
+                //     console.log("ABI loaded successfully:", parsedAbi);
+                // } else {
+                //     console.error("ABI file does not contain an array");
+                // }
+            } catch (error) {
+                console.error("Failed to parse ABI file:", error.message);
+            }
         };
+    
+        reader.onerror = (e) => {
+            console.error("Error reading file:", e);
+        };
+    
+       
     }
+    
 
     useEffect(() => {
-        function displayInput() {
-            console.log(txOutput);
-
-            const element = document.getElementById("exampleFormControlTextarea2")
-            // PrettyPrintJson = JSON.stringify(txOutput,null,2)
-            // console.log(PrettyPrintJson);
-
-            element.value = JSON.stringify(txOutput, null, 2)
-        }
-        displayInput()
+        function decodeInput(){
+            console.log("Entered decode",txOutput);
+          const element = document.getElementById("decodedJson");
+        
+          let outputText = "";
+          if (!txOutput || Object.keys(txOutput).length === 0 || !element) return outputText="Contract Created";
+        
+        
+        
+          // Add function name
+          if (txOutput.name || txOutput["name"]) {
+            console.log(".....Function name ...");
+            console.log(txOutput.name);
+            outputText += `<span style="color: #FFD700; font-weight: bold;">Function Name:</span> ${txOutput.name || txOutput["name"]}<br/><br/>`;
+          };
+            
+        
+          // Handle args
+          Object.keys(txOutput)
+            .filter(key => key.startsWith("args"))
+            .sort((a, b) => parseInt(a.replace("args", "")) - parseInt(b.replace("args", "")))
+            .forEach(key => {
+              console.log(txOutput[key]);
+              let val = txOutput[key];
+              console.log(val);
+        
+              if (Array.isArray(val)) {
+      
+                // If it's an array of JSON strings or objects
+                val = val.map(item => {
+                  console.log(typeof(item));
+                  if (typeof item === "object") {
+                    try {
+                      console.log(JSON.parse(item));
+                      return JSON.parse(item);
+                    } catch {
+                      return item;
+                    }
+                  }
+                  return item;
+                });
+      
+                const formatted = JSON.stringify(val, null, 2)
+              .replace(/"(.*?)":/g, '<span style="color: #f783ac;">"$1"</span>:') // keys
+              .replace(/: "(.*?)"/g, ': <span style="color: #8ce99a;">"$1"</span>') // string values
+              .replace(/: (\d+)/g, ': <span style="color: #91a7ff;">$1</span>'); // numbers
+      
+        
+              outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span><pre style="display:inline;">${formatted}</pre><br/><br/>`;
+              } else if (typeof val === "object") {
+      
+                const formatted = JSON.stringify(val, null, 2)
+              .replace(/"(.*?)":/g, '<span style="color: #f783ac;">"$1"</span>:')
+              .replace(/: "(.*?)"/g, ': <span style="color: #8ce99a;">"$1"</span>')
+              .replace(/: (\d+)/g, ': <span style="color: #91a7ff;">$1</span>');
+      
+              outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span><pre style="display:inline;">${formatted}</pre><br/><br/>`;
+              } else {
+                outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span> <span style="color: #ffffff;">${val}</span><br/><br/>`;
+              }
+            });
+        
+          element.innerHTML = outputText;
+          }
+          decodeInput()
     }, [txOutput])
 
     return (

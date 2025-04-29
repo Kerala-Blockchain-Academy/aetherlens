@@ -24,7 +24,7 @@ func main() {
 		fmt.Println("Cannot connect to DB")
 	}
 
-	if err := DB.AutoMigrate(&models.Block{}, &models.Transaction{}, &models.TransCount{}, models.Contract_call{}); err != nil {
+	if err := DB.AutoMigrate(&models.Block{}, &models.Transaction{}, &models.TransCount{}, models.Contract_call{},models.Register{}); err != nil {
 		fmt.Println("Error in AutoMigrate:", err) // Creating tables if not there
 		log.Fatal(err)
 	} else {
@@ -36,6 +36,14 @@ func main() {
 		app := fiber.New()
 		app.Use(logger.New())
 		app.Use(cors.New())
+
+		app.Post("/register", func(c *fiber.Ctx) error { // Get All Contracts
+			return controllers.Register(c,DB)
+		})
+
+		app.Post("/login", func(c *fiber.Ctx) error { // Get All Contracts
+			return controllers.Login(c,DB)
+		})
 
 		app.Get("/allContracts", func(c *fiber.Ctx) error { // Get All Contracts
 			return controllers.GetAllContracts(c, DB)

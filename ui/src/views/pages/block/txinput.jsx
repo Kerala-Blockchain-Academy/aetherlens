@@ -96,7 +96,7 @@ export default function txInput() {
     if (txOutput.name || txOutput["name"]) {
       console.log(".....Function name ...");
       console.log(txOutput.name);
-      outputText += `<span style="color: #FFD700; font-weight: bold;">Function Name:</span> ${txOutput.name || txOutput["name"]}<br/><br/>`;
+      outputText += `<span style="color: #FFD700; font-weight: bold;">Function Name:</span><span style="color: #f783ac;"> ${txOutput.name || txOutput["name"]}</span><br/><br/>`;
     };
       
   
@@ -141,7 +141,7 @@ export default function txInput() {
 
         outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span><pre style="display:inline;">${formatted}</pre><br/><br/>`;
         } else {
-          outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span> <span style="color: #ffffff;">${val}</span><br/><br/>`;
+          outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span> <span style="color: #f783ac;">${val}</span><br/><br/>`;
         }
       });
   

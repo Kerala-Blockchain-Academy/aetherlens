@@ -11,8 +11,8 @@ import (
 )
 
 type DailyCount struct {
-	Hour       time.Time `gorm:"column:hour"`
-	TotalCount int64     `gorm:"column:trans_count"`
+	Hour       string `gorm:"column:hour"`
+	TotalCount int64     `gorm:"column:tx_count"`
 }
 
 type TenCount struct {
@@ -20,18 +20,32 @@ type TenCount struct {
 	TransCount int64     `gorm:"column:transd_count"`
 }
 
+
+
 func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	var results []DailyCount
 
+	// loc, err := time.LoadLocation("Asia/Kolkata")
+	// if err!=nil{
+	// 	fmt.Println("Failed to load location")
+	// }
+	// fmt.Println(loc)
+	// now := time.Now().In(loc)
+	// fmt.Println(now)
+
+	// // Get start and end of the day
+	// startOfDay := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
+	// fmt.Println("satart",startOfDay)
+	// endOfDay := startOfDay.Add(24 * time.Hour)
+	
 	tx := DB.Table("trans_counts").
-		Select(" date_trunc('hour', to_timestamp(timestamp)) AS hour,SUM(Count) AS trans_count").
-		Where("to_timestamp(timestamp) >= ? AND to_timestamp(timestamp) < ?",
-			time.Now().Truncate(24*time.Hour),
-			time.Now().Add(24*time.Hour).Truncate(24*time.Hour)).
-		Group("date_trunc('hour', to_timestamp(timestamp))").
-		Order("date_trunc('hour', to_timestamp(timestamp))").
-		Scan(&results)
-		fmt.Println(results)
+	Select(`TO_CHAR(TO_TIMESTAMP(timestamp) AT TIME ZONE 'Asia/Kolkata', 'HH24') AS hour, SUM(count) AS tx_count`).
+	Where(`TO_TIMESTAMP(timestamp) >=CURRENT_DATE - INTERVAL '1 day'`).
+	Group("hour").
+	Order("hour").
+	Scan(&results)
+
+	fmt.Println(results)
 
 	if err := tx.Error; err != nil {
 		return err
@@ -201,42 +215,42 @@ func GetLatestBlock(c *fiber.Ctx, DB *gorm.DB) error {
 	}
 }
 
-func GetTxPresent(c *fiber.Ctx, DB *gorm.DB) error{
+func GetTxPresent(c *fiber.Ctx, DB *gorm.DB) error {
 	txHash := c.Params("id")
 	var count int64
 	err := DB.Table("transactions").Where("thash = ?", txHash).Count(&count).Error
 
-	if err!=nil{
+	if err != nil {
 		return err
-	}else if count>0{
+	} else if count > 0 {
 		return c.Status(http.StatusOK).JSON(&count)
-	}else{
+	} else {
 		return c.Status(http.StatusNotFound).JSON(&count)
 	}
 }
 
-func GetAllContracts(c *fiber.Ctx, DB *gorm.DB)error{
+func GetAllContracts(c *fiber.Ctx, DB *gorm.DB) error {
 	var contracts []models.Contract_call
 	result := DB.Find(&contracts)
 
-	if(result.Error!=nil){
+	if result.Error != nil {
 		return result.Error
 	} else {
 		return c.Status(http.StatusOK).JSON(&contracts)
 	}
 }
 
-func GetAllContractTx(c *fiber.Ctx, DB *gorm.DB) error{
+func GetAllContractTx(c *fiber.Ctx, DB *gorm.DB) error {
 	cAddr := c.Params("id")
 	fmt.Println(cAddr)
 	var contractTx []models.Transaction
-	result := DB.Where("to_address = ?",cAddr).Order("time DESC").Limit(100).Find(&contractTx)
+	result := DB.Where("to_address = ?", cAddr).Order("time DESC").Limit(100).Find(&contractTx)
 	// result := DB.Table("transactions").Select("*").Where("to=?", cAddr).Scan(&contractTx)
 	fmt.Println(contractTx)
 
-	if result.Error != nil{
+	if result.Error != nil {
 		return result.Error
-	} else{
+	} else {
 		return c.Status(http.StatusOK).JSON(&contractTx)
 	}
 }
