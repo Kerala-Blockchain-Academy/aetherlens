@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"fmt"
+	
 	"net/http"
-	"golang.org/x/crypto/bcrypt"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/gofiber/fiber/v2"
-	"github.com/pglekshmi/explorerGoPostgreSQL/models"
-	"gorm.io/gorm"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/pglekshmi/explorerGoPostgreSQL/models"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type LoginD struct {
@@ -19,35 +20,33 @@ type LoginD struct {
 var secretKey = []byte("aether-lens")
 
 func Register(c *fiber.Ctx, DB *gorm.DB)error{
-	var newOne models.Register
-
-	fmt.Println(c)
-	err := c.BodyParser(&newOne)
-	fmt.Println(newOne.Password)
-	
-
-	if(err!=nil){
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "Failed to parse request body",
-		})
-	}else{
-		byt, err := bcrypt.GenerateFromPassword([]byte(newOne.Password), 14)
-		if err!=nil{
-			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-				"error": "Bcrypt failed",
-			})
-		}
-		newOne.Password = string(byt)
+	newOne:=[] models.Register{
+		{Name:"Lekshmi",UserName:"Admin",Password:"123"},
+		{Name:"Anju",UserName:"Admin1",Password:"456"},
+		{Name:"Sumi",UserName:"Admin2",Password:"789"},
 	}
 
-	err1:= DB.Create(&newOne).Error
-	if err1!=nil{
-		return err1
-	}else{
-		return c.Status(http.StatusOK).JSON(fiber.Map{
-			"message": "Registered successfully",
-		})
-	}	
+	for _,admin := range newOne{
+		byt, err1 := bcrypt.GenerateFromPassword([]byte(admin.Password), 14)
+		if(err1!=nil){
+			continue
+		}
+		admin.Password = string(byt)
+	
+	
+		var existing models.Register
+		err := DB.First(&existing, "user_name = ?", admin.UserName).Error
+		if err == gorm.ErrRecordNotFound {
+			if err := DB.Create(&admin).Error; err != nil {
+				// log.Println("Error inserting user:", u.UserName, err)
+				c.Status(http.StatusBadRequest).JSON("Error inserting user")
+			} else {
+				c.Status(http.StatusOK).JSON("User inserted")
+			}
+		} else {
+			c.Status(http.StatusBadRequest).JSON("User already exist")
+		}}
+	return nil
 }
 
 func Login(c *fiber.Ctx, DB *gorm.DB)error{
