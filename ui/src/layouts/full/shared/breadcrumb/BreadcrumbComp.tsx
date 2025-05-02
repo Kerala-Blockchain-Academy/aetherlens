@@ -1,7 +1,6 @@
-
-import { Badge, Breadcrumb } from "flowbite-react";
-import { Icon } from "@iconify/react";
-import CardBox from "src/components/shared/CardBox";
+import { Badge, Breadcrumb } from 'flowbite-react';
+import { Icon } from '@iconify/react';
+import CardBox from 'src/components/shared/CardBox';
 
 interface BreadCrumbType {
   subtitle?: string;
@@ -22,17 +21,14 @@ const BreadcrumbComp = ({ items, title }: BreadCrumbType) => {
                   <div key={item.title}>
                     {item.to ? (
                       <Breadcrumb.Item href={item.to}>
-                        <Icon
-                          icon="solar:home-2-line-duotone"
-                          height={20}
-                        ></Icon>{" "}
+                        <Icon icon="solar:home-2-line-duotone" height={20}></Icon>{' '}
                       </Breadcrumb.Item>
                     ) : (
-                      <Badge color={"lightprimary"}>{item.title}</Badge>
+                      <Badge color={'lightprimary'}>{item.title}</Badge>
                     )}
                   </div>
                 ))
-              : ""}
+              : ''}
           </div>
         </Breadcrumb>
       </CardBox>

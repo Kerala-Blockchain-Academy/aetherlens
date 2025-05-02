@@ -28,10 +28,12 @@
 .dropdown-enter-active {
   opacity: 1;
   transform: translate(0);
-  transition: opacity 150ms, transform 150ms;
+  transition:
+    opacity 150ms,
+    transform 150ms;
 }
 
-.notification{
+.notification {
   position: absolute !important;
   left: 104px !important;
   top: 0px !important;
@@ -47,16 +49,23 @@
 .dropdown-leave-active {
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity 150ms, transform 150ms;
+  transition:
+    opacity 150ms,
+    transform 150ms;
 }
 
-.two-cols{
+.two-cols {
   -webkit-columns: 4;
   -moz-columns: 4;
   columns: 4;
 }
 
-[data-simplebar], .simplebar-offset, .simplebar-content,.simplebar-wrapper,.simplebar-mask,.simplebar-content-wrapper{
-  outline:none !important;
-  border:none !important
+[data-simplebar],
+.simplebar-offset,
+.simplebar-content,
+.simplebar-wrapper,
+.simplebar-mask,
+.simplebar-content-wrapper {
+  outline: none !important;
+  border: none !important;
 }

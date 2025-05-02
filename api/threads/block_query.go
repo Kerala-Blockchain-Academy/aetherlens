@@ -40,7 +40,7 @@ func BlockQuery(DB *gorm.DB) {
 
 		if err != nil {
 			fmt.Println(err)
-				continue
+			continue
 		}
 		newBlock := models.Block{
 			Number:     blocks.NumberU64(),
@@ -69,8 +69,7 @@ func BlockQuery(DB *gorm.DB) {
 
 			chainId := k.ChainId()
 
-			Sender,_:= types.Sender(types.LatestSignerForChainID(chainId),k)
-			
+			Sender, _ := types.Sender(types.LatestSignerForChainID(chainId), k)
 
 			toAddress := controllers.TransAddressCheck(k)
 			fromAddr := controllers.TransFromCheck(Sender)
@@ -104,8 +103,8 @@ func BlockQuery(DB *gorm.DB) {
 			newTransaction := models.Transaction{
 				Thash: tHash,
 				// To:blocks.Body().Transactions[k].To().Hex(),
-				ToAddress: toAddress,
-				FromAddress:        fromAddr,
+				ToAddress:   toAddress,
+				FromAddress: fromAddr,
 				Type:        tType,
 				Gas:         k.Gas(),
 				Value:       tValue,

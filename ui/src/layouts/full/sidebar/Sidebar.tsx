@@ -1,14 +1,11 @@
-
-import { Sidebar } from "flowbite-react";
-import SidebarContent from "./Sidebaritems";
-import NavItems from "./NavItems";
-import SimpleBar from "simplebar-react";
-import React from "react";
-import NavCollapse from "./NavCollapse";
+import { Sidebar } from 'flowbite-react';
+import SidebarContent from './Sidebaritems';
+import NavItems from './NavItems';
+import SimpleBar from 'simplebar-react';
+import React from 'react';
+import NavCollapse from './NavCollapse';
 
 const SidebarLayout = () => {
-
-
   return (
     <>
       <div className="xl:block hidden">
@@ -21,9 +18,9 @@ const SidebarLayout = () => {
               AetherLens
             </h1> */}
             <h1 className="text-3xl font-bold">
-             <span className="text-indigo-600">Aether</span ><span className="text-rose-400">Lens</span>
+              <span className="text-indigo-600">Aether</span>
+              <span className="text-rose-400">Lens</span>
             </h1>
-       
           </div>
           <SimpleBar className="h-[calc(100vh_-_294px)]">
             <Sidebar.Items className="px-5 mt-2">
@@ -52,7 +49,6 @@ const SidebarLayout = () => {
               </Sidebar.ItemGroup>
             </Sidebar.Items>
           </SimpleBar>
-
         </Sidebar>
       </div>
     </>

@@ -19,8 +19,7 @@ func GetBlockDetails(i uint64) (*types.Block, error) {
 	blockNum := new(big.Int).SetUint64(i)
 
 	block, err := Client.BlockByNumber(context.Background(), blockNum)
-	
+
 	return block, err
 
 }
-

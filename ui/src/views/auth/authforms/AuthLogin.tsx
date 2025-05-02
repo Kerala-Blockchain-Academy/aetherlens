@@ -1,18 +1,16 @@
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link, useNavigate } from "react-router";
-
-
+import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
+import { Link, useNavigate } from 'react-router';
 
 const AuthLogin = () => {
   const navigate = useNavigate();
-  const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(event);
-     navigate("/dash");
-  }
+    navigate('/dash');
+  };
   return (
     <>
-      <form onSubmit={handleSubmit} >
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <div className="mb-2 block">
             <Label htmlFor="Username" value="Username" />
@@ -40,18 +38,15 @@ const AuthLogin = () => {
         <div className="flex justify-between my-5">
           <div className="flex items-center gap-2">
             <Checkbox id="accept" className="checkbox" />
-            <Label
-              htmlFor="accept"
-              className="opacity-90 font-normal cursor-pointer"
-            >
+            <Label htmlFor="accept" className="opacity-90 font-normal cursor-pointer">
               Remeber this Device
             </Label>
           </div>
-          <Link to={"/"} className="text-primary text-sm font-medium">
+          <Link to={'/'} className="text-primary text-sm font-medium">
             Forgot Password ?
           </Link>
         </div>
-        <Button type="submit" color={"primary"}  className="w-full bg-primary text-white rounded-xl">
+        <Button type="submit" color={'primary'} className="w-full bg-primary text-white rounded-xl">
           Sign in
         </Button>
       </form>

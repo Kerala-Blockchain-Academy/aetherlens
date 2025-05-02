@@ -8,16 +8,15 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/ethclient"
-	
 )
 
 func ConnectNode() (*ethclient.Client, error) {
 	// if err:=godotenv.Load(); err!=nil{
 	// 	fmt.Println("Cannot get the env file")
 	// }
-	
+
 	url := os.Getenv("CHAIN_URL")
-	
+
 	fmt.Println(url)
 	client, err := ethclient.Dial(url)
 	fmt.Println(err)
@@ -26,7 +25,7 @@ func ConnectNode() (*ethclient.Client, error) {
 		return nil, fmt.Errorf("failed to connect to Ethereum node: %w", err)
 	}
 	_, err = client.BlockNumber(context.Background())
-	
+
 	if err != nil {
 		return nil, fmt.Errorf("ethereum node is unreachable: %w", err)
 	}
@@ -41,7 +40,7 @@ func RetryConnectNode(maxRetries int, delay time.Duration) (*ethclient.Client, e
 
 	for i := 1; i <= maxRetries; i++ {
 		client, err = ConnectNode()
-		
+
 		if client != nil {
 			fmt.Println("Successfully connected to node!")
 			return client, nil

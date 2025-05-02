@@ -1,10 +1,7 @@
-import { AllShadows } from "src/components/shadows/AllShadows"
-
+import { AllShadows } from 'src/components/shadows/AllShadows';
 
 const Shadow = () => {
-  return (
-    <AllShadows/>
-  )
-}
+  return <AllShadows />;
+};
 
-export default Shadow
+export default Shadow;

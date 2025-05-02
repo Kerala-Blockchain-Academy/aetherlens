@@ -27,7 +27,7 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 		// } else if exists {
 		// 	fmt.Println("Block exists")
 		// } else {
-			
+
 		blocks, err := GetBlockDetails(i)
 
 		if err != nil {
@@ -60,10 +60,10 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 		for _, k := range blocks.Body().Transactions {
 			chainId := k.ChainId()
 
-			Sender,_:= types.Sender(types.LatestSignerForChainID(chainId),k)
-			
+			Sender, _ := types.Sender(types.LatestSignerForChainID(chainId), k)
+
 			// Checking all the transaction fields
-			fmt.Printf("Transactions %v",k)
+			fmt.Printf("Transactions %v", k)
 			toAddress := TransAddressCheck(k)
 			fromAddr := TransFromCheck(Sender)
 			tHash := TransHashCheck(k)
@@ -94,8 +94,8 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 
 			newTransaction := models.Transaction{
 				Thash:       tHash,
-				ToAddress:          toAddress,
-				FromAddress:        fromAddr,
+				ToAddress:   toAddress,
+				FromAddress: fromAddr,
 				Type:        tType,
 				Gas:         k.Gas(),
 				Value:       tValue,
@@ -123,4 +123,5 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 
 	}
 }
+
 // }

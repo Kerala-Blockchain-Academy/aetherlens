@@ -1,64 +1,60 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router';
+import { Icon } from '@iconify/react';
+import { Table } from 'flowbite-react';
 
-import { useState,useEffect } from "react";
-import { Link } from "react-router";
-import { Icon } from "@iconify/react";
-import { Table } from "flowbite-react";
-
-import SimpleBar from "simplebar-react";
-
+import SimpleBar from 'simplebar-react';
 
 const ContractCall = () => {
-    console.log("Hello");
-   
+  console.log('Hello');
 
-    const [contractCalls, setContractCalls] = useState([])
-    const [count, setCount] = useState(0)
-    useEffect(() => { ContractCall() }, []);
-    async function ContractCall() {
-  
-      let res = await fetch("http://127.0.0.1:8080/allContracts", {
-        method: "GET",
-        redirect: "follow"
-      })
-      console.log(res);
-  
-      let lblk = [];
-      lblk = await res.json();
-      console.log(lblk);
-      const lblks = JSON.stringify(lblk);
-      const lblkp = JSON.parse(lblks)
-      setContractCalls(lblkp)
-  
+  const [contractCalls, setContractCalls] = useState([]);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    ContractCall();
+  }, []);
+  async function ContractCall() {
+    let res = await fetch('http://127.0.0.1:8080/allContracts', {
+      method: 'GET',
+      redirect: 'follow',
+    });
+    console.log(res);
+
+    let lblk = [];
+    lblk = await res.json();
+    console.log(lblk);
+    const lblks = JSON.stringify(lblk);
+    const lblkp = JSON.parse(lblks);
+    setContractCalls(lblkp);
+  }
+
+  useEffect(() => {
+    let c = 0;
+    contractCalls.forEach((x) => {
+      console.log(x);
+
+      c++;
+    });
+    setCount(c);
+  }, [contractCalls]);
+
+  const shortenHash = (hash: any) => {
+    if (!hash) return '';
+    return `${hash.slice(0, 6)}...${hash.slice(-6)}`;
+  };
+
+  const handleCopy = async (text: any) => {
+    if (document.hasFocus()) {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Copied to clipboard!');
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    } else {
+      alert('Please focus the page and try again.');
     }
-  
-    useEffect(()=>{
-        let c=0;
-        contractCalls.forEach(x=>{
-          console.log(x);
-          
-            c++;
-
-        })
-        setCount(c);
-    },[contractCalls])
-
-    const shortenHash = (hash:any) => {
-        if (!hash) return '';
-        return `${hash.slice(0, 6)}...${hash.slice(-6)}`;
-      };
-
-      const handleCopy = async (text:any) => {
-        if (document.hasFocus()) {
-          try {
-            await navigator.clipboard.writeText(text);
-            alert('Copied to clipboard!');
-          } catch (err) {
-            console.error('Failed to copy:', err);
-          }
-        } else {
-          alert('Please focus the page and try again.');
-        }
-      };
+  };
 
   return (
     <>
@@ -75,48 +71,66 @@ const ContractCall = () => {
                 <Table.HeadCell>Calls</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y divide-border dark:divide-darkborder ">
-                {contractCalls.map((item,index)=>{
-                    const it = JSON.stringify(item)
-                    const itm = JSON.parse(it)
-                    console.log(itm.Address);
-                    
-                    return(
-                     <Table.Row key={index}>
-                         <Table.Cell className="whitespace-nowrap ps-6">
-                      <div className="flex gap-3 items-center">
-                        <div className="truncat line-clamp-2 sm:text-wrap max-w-56">
-                          <h6 className="text-sm"><span className="inline-flex items-center gap-1">{shortenHash(itm.Address)}<Icon icon="material-symbols:ad-group-sharp" onClick={() => { handleCopy(itm.Address) }} height="18" className="text-dark" /></span></h6>
+                {contractCalls.map((item, index) => {
+                  const it = JSON.stringify(item);
+                  const itm = JSON.parse(it);
+                  console.log(itm.Address);
+
+                  return (
+                    <Table.Row key={index}>
+                      <Table.Cell className="whitespace-nowrap ps-6">
+                        <div className="flex gap-3 items-center">
+                          <div className="truncat line-clamp-2 sm:text-wrap max-w-56">
+                            <h6 className="text-sm">
+                              <span className="inline-flex items-center gap-1">
+                                {shortenHash(itm.Address)}
+                                <Icon
+                                  icon="material-symbols:ad-group-sharp"
+                                  onClick={() => {
+                                    handleCopy(itm.Address);
+                                  }}
+                                  height="18"
+                                  className="text-dark"
+                                />
+                              </span>
+                            </h6>
+                          </div>
                         </div>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell className="whitespace-nowrap ps-6">
-                      <div className="flex gap-3 items-center">
-                        <div className="truncat line-clamp-2 sm:text-wrap max-w-56">
-                          <h6 className="text-sm"><Link to={`/ctxns/${itm.Address}`}  className="underline decoration-solid text-cyan-500">{itm.Call}</Link></h6>
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap ps-6">
+                        <div className="flex gap-3 items-center">
+                          <div className="truncat line-clamp-2 sm:text-wrap max-w-56">
+                            <h6 className="text-sm">
+                              <Link
+                                to={`/ctxns/${itm.Address}`}
+                                className="underline decoration-solid text-cyan-500"
+                              >
+                                {itm.Call}
+                              </Link>
+                            </h6>
+                          </div>
                         </div>
-                      </div>
-                    </Table.Cell>
-                     </Table.Row>
-                    )
-})}
-               
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table>
           </div>
         </SimpleBar>
       </div>
       <div className="col-span-12 text-center">
-      <p className="text-base">
-        Design and Developed by{""}
-        <Link
-          to="https://kba.ai/"
-          target="_blank"
-          className="pl-1 text-primary underline decoration-primary"
-        >
-          Kerala Blockchain Academy
-        </Link>
-      </p>
-    </div>
+        <p className="text-base">
+          Design and Developed by{''}
+          <Link
+            to="https://kba.ai/"
+            target="_blank"
+            className="pl-1 text-primary underline decoration-primary"
+          >
+            Kerala Blockchain Academy
+          </Link>
+        </p>
+      </div>
     </>
   );
 };

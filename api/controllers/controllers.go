@@ -12,15 +12,13 @@ import (
 
 type DailyCount struct {
 	Hour       string `gorm:"column:hour"`
-	TotalCount int64     `gorm:"column:tx_count"`
+	TotalCount int64  `gorm:"column:tx_count"`
 }
 
 type TenCount struct {
 	Day        time.Time `gorm:"column:day"`
 	TransCount int64     `gorm:"column:transd_count"`
 }
-
-
 
 func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	var results []DailyCount
@@ -37,13 +35,13 @@ func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	// startOfDay := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
 	// fmt.Println("satart",startOfDay)
 	// endOfDay := startOfDay.Add(24 * time.Hour)
-	
+
 	tx := DB.Table("trans_counts").
-	Select(`TO_CHAR(TO_TIMESTAMP(timestamp) AT TIME ZONE 'Asia/Kolkata', 'HH24') AS hour, SUM(count) AS tx_count`).
-	Where(`TO_TIMESTAMP(timestamp) >=CURRENT_DATE - INTERVAL '1 day'`).
-	Group("hour").
-	Order("hour").
-	Scan(&results)
+		Select(`TO_CHAR(TO_TIMESTAMP(timestamp) AT TIME ZONE 'Asia/Kolkata', 'HH24') AS hour, SUM(count) AS tx_count`).
+		Where(`TO_TIMESTAMP(timestamp) >=CURRENT_DATE - INTERVAL '1 day'`).
+		Group("hour").
+		Order("hour").
+		Scan(&results)
 
 	fmt.Println(results)
 

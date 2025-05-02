@@ -1,16 +1,13 @@
-
-import  {useState } from "react";
-import { ChildItem } from "../Sidebaritems";
-import NavItems from "../NavItems";
-import { useLocation } from "react-router";
-import React from "react";
-import { CustomCollapse } from "../CustomCollapse";
+import { useState } from 'react';
+import { ChildItem } from '../Sidebaritems';
+import NavItems from '../NavItems';
+import { useLocation } from 'react-router';
+import React from 'react';
+import { CustomCollapse } from '../CustomCollapse';
 
 interface NavCollapseProps {
   item: ChildItem;
 }
-
-
 
 const NavCollapse: React.FC<NavCollapseProps> = ({ item }: any) => {
   const location = useLocation();
@@ -18,11 +15,9 @@ const NavCollapse: React.FC<NavCollapseProps> = ({ item }: any) => {
 
   // Determine if any child matches the current path
   const activeDD = item.children.find((t: { url: string }) => t.url === pathname);
-  
 
   // Manage open/close state for the collapse
   const [isOpen, setIsOpen] = useState<boolean>(!!activeDD);
-
 
   // Toggle the collapse
   const handleToggle = () => {
@@ -31,15 +26,15 @@ const NavCollapse: React.FC<NavCollapseProps> = ({ item }: any) => {
 
   return (
     <CustomCollapse
-      label={ `${item.name}`}
+      label={`${item.name}`}
       open={isOpen}
       onClick={handleToggle}
-      icon={item.icon} 
+      icon={item.icon}
       isPro={item.isPro}
       className={
         Boolean(activeDD)
-          ? "!text-white bg-primary rounded-xl hover:bg-primary hover:text-white shadow-btnshdw"
-          : "rounded-full dark:text-white/80 hover:text-primary hover:bg-lightprimary"
+          ? '!text-white bg-primary rounded-xl hover:bg-primary hover:text-white shadow-btnshdw'
+          : 'rounded-full dark:text-white/80 hover:text-primary hover:bg-lightprimary'
       }
     >
       {/* Render child items */}

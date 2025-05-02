@@ -1,10 +1,7 @@
-import BasicTypography from "src/components/typography/BasicTypography"
-
+import BasicTypography from 'src/components/typography/BasicTypography';
 
 const Typography = () => {
-  return (
-    <BasicTypography/>
-  )
-}
+  return <BasicTypography />;
+};
 
-export default Typography
+export default Typography;

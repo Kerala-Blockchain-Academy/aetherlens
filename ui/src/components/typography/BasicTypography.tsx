@@ -1,8 +1,6 @@
-
-
 const BasicTypography = () => {
-    return (
-      <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
+  return (
+    <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
       <h5 className="card-title">Typography</h5>
       <div className="mt-6">
         <div className="border border-ld rounded-xl px-6 py-4 mb-6">
@@ -31,7 +29,7 @@ const BasicTypography = () => {
         </div>
       </div>
     </div>
-    )
-  }
-  
-  export default BasicTypography
+  );
+};
+
+export default BasicTypography;

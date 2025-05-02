@@ -1,5 +1,3 @@
-
-
 const Solar = () => {
   return (
     <>
