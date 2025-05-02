@@ -1,6 +1,5 @@
 {
-  "name": "material-react-vite-ts",
-  "private": true,
+  "name": "aether_lens",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
