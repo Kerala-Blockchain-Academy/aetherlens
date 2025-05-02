@@ -21,7 +21,7 @@ export interface MenuItem {
   isPro?: boolean;
 }
 
-import { uniqueId } from 'lodash';
+// import { uniqueId } from 'lodash';
 
 const SidebarContent: MenuItem[] = [
   {
@@ -30,21 +30,21 @@ const SidebarContent: MenuItem[] = [
       {
         name: 'Dashboard',
         icon: 'solar:widget-add-line-duotone',
-        id: uniqueId(),
+        // id: uniqueId(),
         url: '/dash',
         isPro: false,
       },
       {
         name: 'Decode',
         icon: 'solar:atom-line-duotone',
-        id: uniqueId(),
+        // id: uniqueId(),
         url: '/txInput',
         isPro: false,
       },
       {
         name: 'ContractCalls',
         icon: 'ri:contract-fill',
-        id: uniqueId(),
+        // id: uniqueId(),
         url: '/ccall',
         isPro: false,
       },

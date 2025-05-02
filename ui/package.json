@@ -13,6 +13,7 @@
   "dependencies": {
     "@svgr/rollup": "8.1.0",
     "@tabler/icons-react": "^2.39.0",
+    "@types/lodash": "^4.17.16",
     "aos": "^2.3.4",
     "apexcharts": "3.48.0",
     "chance": "^1.1.11",
@@ -32,6 +33,7 @@
     "react-apexcharts": "^1.4.1",
     "react-dom": "^19.0.0",
     "react-helmet": "^6.1.0",
+    "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.5.2",
     "react-router": "^7.0.2",
     "remark": "^15.0.1",
@@ -39,6 +41,7 @@
     "simplebar": "^6.2.7",
     "simplebar-react": "^3.2.4",
     "stylis-plugin-rtl": "^2.1.1",
+    "tailwind-merge": "^3.2.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
