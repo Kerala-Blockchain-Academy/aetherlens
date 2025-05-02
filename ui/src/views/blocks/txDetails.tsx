@@ -52,6 +52,8 @@ const TxDetails = () => {
         setCount(0)
         let c=0;
         txDetails.forEach(x=>{
+          console.log(x);
+          
             c++;
             
         })

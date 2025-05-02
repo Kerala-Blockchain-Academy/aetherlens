@@ -1,10 +1,10 @@
-import { ProductTable } from "src/components/tables/ProductTable"
+// import { ProductTable } from "src/components/tables/ProductTable"
 
 
 const Table = () => {
   return (
      <>
-     <ProductTable/>
+    
      </>
   )
 }

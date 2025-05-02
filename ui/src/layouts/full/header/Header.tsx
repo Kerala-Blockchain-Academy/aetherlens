@@ -1,12 +1,10 @@
 
 import { useState, useEffect } from "react";
 import {  Navbar } from "flowbite-react";
-import { Icon } from "@iconify/react";
 import Profile from "./Profile";
 import { Drawer } from "flowbite-react";
 import MobileSidebar from "../sidebar/MobileSidebar";
 import { useNavigate } from "react-router";
-import { log } from "console";
 
 
 const Header = () => {
@@ -27,9 +25,7 @@ const Header = () => {
   }
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      setBlockNumber("");
-    };
+   
     const handleScroll = () => {
     
       if (window.scrollY > 50) {

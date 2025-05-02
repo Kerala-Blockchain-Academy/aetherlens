@@ -1,5 +1,4 @@
 
-import FullLogo from "src/layouts/full/shared/logo/FullLogo";
 import AuthRegister from "../authforms/AuthRegister";
 import { Link } from "react-router";
 
