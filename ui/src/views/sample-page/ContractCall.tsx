@@ -34,6 +34,8 @@ const ContractCall = () => {
     useEffect(()=>{
         let c=0;
         contractCalls.forEach(x=>{
+          console.log(x);
+          
             c++;
 
         })
