@@ -1,12 +1,7 @@
 // import { ProductTable } from "src/components/tables/ProductTable"
 
-
 const Table = () => {
-  return (
-     <>
-    
-     </>
-  )
-}
+  return <></>;
+};
 
-export default Table
+export default Table;
