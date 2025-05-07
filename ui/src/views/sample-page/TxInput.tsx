@@ -43,7 +43,7 @@ const TxInput = () => {
       placeEl.innerHTML = '';
     }
 
-    let res = await fetch(`http://127.0.0.1:8080/txByNumber/${searchInput}`, {
+    let res = await fetch(`/api/txByNumber/${searchInput}`, {
       method: 'GET',
       redirect: 'follow',
     });
@@ -92,7 +92,7 @@ const TxInput = () => {
       params: [bHash],
       id: 1,
     };
-    let res = await fetch('http://127.0.0.1:8545', {
+    let res = await fetch(`${process.env.CHAIN_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

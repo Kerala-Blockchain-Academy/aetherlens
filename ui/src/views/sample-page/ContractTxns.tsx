@@ -18,7 +18,7 @@ const ContractTxns = () => {
   async function TxD() {
     console.log('HEEELoo');
 
-    let res = await fetch(`http://127.0.0.1:8080/contractTx/${blk.id}`, {
+    let res = await fetch(`/api/contractTx/${blk.id}`, {
       method: 'GET',
       redirect: 'follow',
     });
@@ -35,7 +35,7 @@ const ContractTxns = () => {
   // useEffect(() => { ContractCall() }, []);
   // async function ContractCall() {
 
-  //   let res = await fetch("http://127.0.0.1:8080/allContracts", {
+  //   let res = await fetch("/api/allContracts", {
   //     method: "GET",
   //     redirect: "follow"
   //   })

@@ -8,7 +8,7 @@ const TotalContract = () => {
     async function fetchContractCount() {
       console.log('hello');
 
-      const response = await fetch('http://127.0.0.1:8080/contractCount');
+      const response = await fetch('/api/contractCount');
       console.log('hi');
 
       const contra = await response.json();

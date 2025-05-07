@@ -11,7 +11,7 @@ const TxCount = () => {
   async function fetchTotalTrans() {
     console.log('hello');
 
-    const response = await fetch('http://127.0.0.1:8080/transCount');
+    const response = await fetch('/api/transCount');
     console.log('hi', response);
 
     const trans = await response.json();

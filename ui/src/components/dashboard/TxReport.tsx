@@ -20,7 +20,7 @@ const TxReport = () => {
       counts[j] = 0;
     }
 
-    const response = await fetch('http://127.0.0.1:8080/tooDay');
+    const response = await fetch('/api/tooDay');
     console.log(response);
     if (response.status == 400) {
     } else {
@@ -201,7 +201,7 @@ const TxReport = () => {
       counts[j] = 0;
     }
 
-    const response = await fetch('http://127.0.0.1:8080/tenday');
+    const response = await fetch('/api/tenday');
     console.log(response);
     if (response.status == 400) {
     } else {

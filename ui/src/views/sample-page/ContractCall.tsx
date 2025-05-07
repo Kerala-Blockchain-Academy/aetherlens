@@ -14,7 +14,7 @@ const ContractCall = () => {
     ContractCall();
   }, []);
   async function ContractCall() {
-    let res = await fetch('http://127.0.0.1:8080/allContracts', {
+    let res = await fetch('/api/allContracts', {
       method: 'GET',
       redirect: 'follow',
     });

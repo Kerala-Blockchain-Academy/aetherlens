@@ -14,7 +14,7 @@ const TxDetails = () => {
     TxD();
   }, [blk.id]);
   async function TxD() {
-    let res = await fetch(`http://127.0.0.1:8080/txByNumber/${blk.id}`, {
+    let res = await fetch(`/api/txByNumber/${blk.id}`, {
       method: 'GET',
       redirect: 'follow',
     });

@@ -21,7 +21,7 @@ const BlockDetails = () => {
     BlockD();
   }, []);
   async function BlockD() {
-    let res = await fetch(`http://127.0.0.1:8080/block/${blk.id}`, {
+    let res = await fetch(`/api/block/${blk.id}`, {
       method: 'GET',
       redirect: 'follow',
     });
@@ -35,7 +35,7 @@ const BlockDetails = () => {
       navigate('/auth/404');
     }
 
-    let result = await fetch(`http://127.0.0.1:8080/txCountbyNumber/${blk.id}`);
+    let result = await fetch(`/api/txCountbyNumber/${blk.id}`);
     console.log(result);
 
     let count;

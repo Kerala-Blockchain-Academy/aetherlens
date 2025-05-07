@@ -24,7 +24,7 @@ const AuthRegister = () => {
     console.log(event);
     console.log('Form submitted:', formData);
     const data = formData;
-    const result = await fetch('http://127.0.0.1:8080/register', {
+    const result = await fetch('/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
