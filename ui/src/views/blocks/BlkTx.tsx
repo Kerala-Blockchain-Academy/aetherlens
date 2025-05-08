@@ -38,9 +38,9 @@ export default function BlkTx() {
         params: [txHash],
         id: 1,
       };
-      console.log(process.env.CHAIN_URL);
+      console.log(import.meta.env.VITE_CHAIN_URL);
       
-      let res = await fetch(`${process.env.CHAIN_URL}`, {
+      let res = await fetch(`${import.meta.env.VITE_CHAIN_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
