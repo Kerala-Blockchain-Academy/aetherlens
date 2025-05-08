@@ -97,7 +97,9 @@ const TxInput = () => {
       params: [bHash],
       id: 1,
     };
-    let res = await fetch(`${process.env.CHAIN_URL}`, {
+    console.log(import.meta.env.VITE_CHAIN_URL);
+    
+    let res = await fetch(`${import.meta.env.VITE_CHAIN_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

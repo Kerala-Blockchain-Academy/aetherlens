@@ -38,6 +38,8 @@ export default function BlkTx() {
         params: [txHash],
         id: 1,
       };
+      console.log(process.env.CHAIN_URL);
+      
       let res = await fetch(`${process.env.CHAIN_URL}`, {
         method: 'POST',
         headers: {

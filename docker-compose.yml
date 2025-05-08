@@ -42,9 +42,9 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
+      args:
+        - VITE_CHAIN_URL=${CHAIN_URL}
     container_name: aetherlens-ui
-    environment:
-      - CHAIN_URL=${CHAIN_URL}
     depends_on:
       - api
     volumes:
