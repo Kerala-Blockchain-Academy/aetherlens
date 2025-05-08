@@ -1,12 +1,15 @@
 import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
 
+
 const LatestBlock = () => {
   const [latestBlock, setLatestBlock] = useState(0);
+  
 
   useEffect(() => {
     async function fetchLatestBlock() {
       const response = await fetch('/api/latestBlock');
+     
       const blk = await response.json();
       console.log('Latest', blk);
 
@@ -21,6 +24,7 @@ const LatestBlock = () => {
 
   return (
     <>
+    
       <div className="bg-lighterror rounded-lg p-6 relative w-full break-words">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

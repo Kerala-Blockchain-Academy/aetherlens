@@ -2,11 +2,12 @@
 // @ts-ignore
 import React from 'react';
 import { Link } from 'react-router';
+import { Icon } from '@iconify/react';
 import { Label, Textarea } from 'flowbite-react';
 import { Button } from 'flowbite-react';
 import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
-import { Alert } from 'flowbite-react';
+import { Toast, ToastToggle } from "flowbite-react";
 
 const TxInput = () => {
   const [txInput, setTxInput] = useState('');
@@ -14,6 +15,7 @@ const TxInput = () => {
   const [abi, setAbi] = useState([]);
   const [txOutput, setTxOutput] = useState<any>({});
   const [showAlert, setShowAlert] = useState(false);
+  const [showWarn,setShowWarn] = useState(false)
 
   useEffect(() => {
     const placeEl = document.getElementById('txButton');
@@ -47,7 +49,10 @@ const TxInput = () => {
       method: 'GET',
       redirect: 'follow',
     });
-    console.log(res);
+    console.log(res.status);
+    if(res.status==502 || res.status==500|| res.status==400|| res.status == 403){
+      setShowAlert(true);
+    }
 
     let lblk = [];
     lblk = await res.json();
@@ -99,14 +104,18 @@ const TxInput = () => {
       },
       body: JSON.stringify(data1),
     });
-    console.log(res);
+    console.log("Status",res.status);
+    if(res.status==502 || res.status==500|| res.status==400|| res.status == 403){
+      setShowWarn(true)
+    }
+   
 
     let result = await res.json();
     console.log(result);
     if (result.error) {
       console.log('error');
 
-      setShowAlert(true);
+      
     } else {
       setTxInput(result.result.input);
     }
@@ -204,10 +213,23 @@ const TxInput = () => {
   return (
     <>
       {showAlert && (
-        <Alert color="info" className="rounded-md">
-          <span className="font-medium">Info:</span> Something went wrong!Please Check Blocknumber
-        </Alert>
-      )}
+               <Toast>
+               <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-pink-100 text-pink-500 dark:bg-pink-800 dark:text-pink-200">
+                 <Icon icon="garden:alert-warning-fill-12" className="h-5 w-5" />
+               </div>
+               <div className="ml-3 text-sm font-normal">Please Check BlockNumber.</div>
+               <ToastToggle onDismiss={() => setShowAlert(false)}/>
+             </Toast>
+            )}
+             {showWarn && (
+               <Toast>
+               <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-pink-100 text-pink-500 dark:bg-pink-800 dark:text-pink-200">
+                 <Icon icon="line-md:alert-loop" className="h-5 w-5" />
+               </div>
+               <div className="ml-3 text-sm font-normal">Something went wrong,Can't get Transaction Data.</div>
+               <ToastToggle onDismiss={() => setShowWarn(false)}/>
+             </Toast>
+            )}
       <h5 className="card-title">Decoded Input</h5>
       <div className="grid">
         <form className="w-full max-w-md mb-4" onSubmit={handleSearch}>

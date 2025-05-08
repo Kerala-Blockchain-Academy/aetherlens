@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from 'flowbite-react';
-import Profile from './Profile';
+// import Profile from './Profile';
 import { Drawer } from 'flowbite-react';
 import MobileSidebar from '../sidebar/MobileSidebar';
 import { useNavigate } from 'react-router';
@@ -95,7 +95,7 @@ const Header = () => {
               </div>
             </form>
 
-            <Profile />
+            {/* <Profile /> */}
             {/* </div> */}
           </div>
         </Navbar>

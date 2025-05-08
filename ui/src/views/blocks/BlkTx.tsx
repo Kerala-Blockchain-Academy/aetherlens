@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { Label, Textarea } from 'flowbite-react';
-import { Button, Alert } from 'flowbite-react';
+import { Icon } from '@iconify/react';
+import { Button, Toast, ToastToggle } from 'flowbite-react';
 import { ethers } from 'ethers';
 
 export default function BlkTx() {
@@ -157,10 +158,14 @@ export default function BlkTx() {
   return (
     <>
       {showAlert && (
-        <Alert color="info" className="rounded-md">
-          <span className="font-medium">Info:</span> Something went wrong!Please Check Blocknumber
-        </Alert>
-      )}
+               <Toast>
+               <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-pink-100 text-pink-500 dark:bg-pink-800 dark:text-pink-200">
+                 <Icon icon="line-md:alert-loop" className="h-5 w-5" />
+               </div>
+               <div className="ml-3 text-sm font-normal">Something went wrong..Check Blocknumber.</div>
+               <ToastToggle />
+             </Toast>
+            )}
       <h5 className="card-title">Decoded Input</h5>
       <div className="grid">
         <div className="flex flex-wrap gap-12">
