@@ -13,6 +13,8 @@ services:
       - POSTGRES_PORT=${PG_PORT}
     expose:
       - ${PG_PORT}
+    volumes:
+      - postgres:/var/lib/postgresql/data
     networks:
       - aetherlens
 
@@ -51,3 +53,7 @@ services:
       - ${UI_PORT}:${UI_PORT}
     networks:
       - aetherlens
+
+volumes:
+  postgres:
+    name: aetherlens-db
