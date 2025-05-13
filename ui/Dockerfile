@@ -4,7 +4,7 @@ ARG VITE_CHAIN_URL
 
 ENV VITE_CHAIN_URL=$VITE_CHAIN_URL
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9.0.0
 
 WORKDIR /ui
 

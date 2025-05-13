@@ -27,8 +27,28 @@ const ContractTxns = () => {
     let lblk = [];
     lblk = await res.json();
     console.log(lblk);
-    setTxDetails(lblk);
+
+    const updatedTxDetails = lblk.map((tx: any) => {
+      // Assuming `tx.Time` is a UNIX timestamp in seconds
+      const timestamp = tx.Time * (tx.Time.toString().length === 10 ? 1000 : 1);
+      tx.Time = timeAgo(timestamp);
+      return tx;
+    });
+
+    setTxDetails(updatedTxDetails);
   }
+  const timeAgo = (timestamp: number): string => {
+    const now = Date.now();
+    const diff = Math.floor((now - timestamp) / 1000); // difference in seconds
+  
+    if (diff < 60) return `${diff} sec${diff !== 1 ? 's' : ''} ago`;
+    const minutes = Math.floor(diff / 60);
+    if (minutes < 60) return `${minutes} min${minutes !== 1 ? 's' : ''} ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hr${hours !== 1 ? 's' : ''} ago`;
+    const days = Math.floor(hours / 24);
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
+  };
 
   // const [contractCalls, setContractCalls] = useState([])
   // const [count, setCount] = useState(0)
@@ -88,10 +108,11 @@ const ContractTxns = () => {
             <Table hoverable>
               <Table.Head>
                 <Table.HeadCell className="p-6">Transaction Hash</Table.HeadCell>
+                <Table.HeadCell>Block</Table.HeadCell>
                 <Table.HeadCell>From</Table.HeadCell>
                 <Table.HeadCell>To</Table.HeadCell>
                 <Table.HeadCell>Input Data</Table.HeadCell>
-                <Table.HeadCell>Amount</Table.HeadCell>
+                <Table.HeadCell>Time</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y divide-border dark:divide-darkborder ">
                 {txDetails.map((item, index) => {
@@ -117,6 +138,13 @@ const ContractTxns = () => {
                                 />
                               </span>
                             </h6>
+                          </div>
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap ps-6">
+                        <div className="flex gap-3 items-center">
+                          <div className="truncat line-clamp-2 sm:text-wrap max-w-56">
+                            <h6 className="text-sm">{itm.BlockNumber} </h6>
                           </div>
                         </div>
                       </Table.Cell>
@@ -176,7 +204,7 @@ const ContractTxns = () => {
                       <Table.Cell className="whitespace-nowrap ps-6">
                         <div className="flex gap-3 items-center">
                           <div className="truncat line-clamp-2 sm:text-wrap max-w-56">
-                            <h6 className="text-sm">{itm.Value} Ethers</h6>
+                            <h6 className="text-sm">{itm.Time} </h6>
                           </div>
                         </div>
                       </Table.Cell>
