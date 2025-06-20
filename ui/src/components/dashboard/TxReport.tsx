@@ -203,7 +203,12 @@ const TxReport = () => {
 
     const response = await fetch('/api/tenday');
     console.log(response);
-    if (response.status == 400) {
+    if (response.status == 400||response.status==404) {
+
+      console.log('No data available for the last 10 days');
+      // Handle the case where no data is available
+      // You might want to set counts to an array of zeros or show a message
+      counts.fill(0); // Fill counts with zeros if no data is available
     } else {
       const data = await response.json();
       console.log(data);
