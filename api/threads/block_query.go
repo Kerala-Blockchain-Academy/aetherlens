@@ -101,14 +101,14 @@ func BlockQuery(DB *gorm.DB) {
 			Count++
 
 			newTransaction := models.Transaction{
-				Thash: tHash,
-				// To:blocks.Body().Transactions[k].To().Hex(),
+				Thash:       tHash,
 				ToAddress:   toAddress,
 				FromAddress: fromAddr,
 				Type:        tType,
 				Gas:         k.Gas(),
 				Value:       tValue,
 				BlockNumber: newBlock.Number,
+				Time:        newBlock.Time,
 			}
 
 			if err := DB.Create(&newTransaction).Error; err != nil {

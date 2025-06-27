@@ -10,6 +10,11 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main
 
-FROM scratch AS runner
+#FROM scratch AS runner
+
+FROM alpine:latest AS runner
+
+# Install CA certificates
+RUN apk --no-cache add ca-certificates
 
 COPY --from=builder /api/main /
