@@ -37,13 +37,13 @@ func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	// endOfDay := startOfDay.Add(24 * time.Hour)
 
 	tx := DB.Table("trans_counts").
-		Select(`TO_CHAR(TO_TIMESTAMP(timestamp) AT TIME ZONE 'Asia/Kolkata', 'HH24') AS hour, SUM(count) AS tx_count`).
-		Where(`TO_TIMESTAMP(timestamp) >=CURRENT_DATE - INTERVAL '1 day'`).
+		Select(`TO_CHAR(TO_TIMESTAMP(timestamp)  AT TIME ZONE 'Asia/Kolkata', 'HH24') AS hour, SUM(count) AS tx_count`).
+		Where(`TO_TIMESTAMP(timestamp) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kolkata' >= (CURRENT_DATE AT TIME ZONE 'Asia/Kolkata') - INTERVAL '1 day'`).
 		Group("hour").
 		Order("hour").
 		Scan(&results)
 
-	fmt.Println(results)
+	fmt.Println("today",results)
 
 	if err := tx.Error; err != nil {
 		return err
