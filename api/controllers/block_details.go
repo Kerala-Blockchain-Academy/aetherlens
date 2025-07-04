@@ -20,8 +20,8 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 
 		var exists bool
 
-		result := DB.Raw("SELECT EXISTS (SELECT 1 FROM blocks WHERE  number= ?)", i).Scan(&exists)
-		fmt.Println(result)
+		// result := DB.Raw("SELECT EXISTS (SELECT 1 FROM blocks WHERE  number= ?)", i).Scan(&exists)
+		// fmt.Println(result)
 		// if result.Error != nil {
 		// 	fmt.Println("Error checking block:", result.Error)
 		// } else if exists {
@@ -34,6 +34,11 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 			fmt.Println(err)
 			continue
 		}
+
+		err1:= DB.Raw("SELECT EXISTS (SELECT 1 FROM blocks WHERE number=?)",blocks.NumberU64()).Scan(&exists).Error
+		if(err1!=nil){
+			fmt.Println("Something went wrong with DB")
+		}else if(!exists){
 		newBlock := models.Block{
 			Number:     blocks.NumberU64(),
 			Hash:       blocks.Hash().Hex(),
@@ -119,6 +124,9 @@ func BlockDetails(i uint64, j uint64, DB *gorm.DB, Client *ethclient.Client) {
 
 		}
 		fmt.Println("All Transactions entered")
+	}else{
+		fmt.Println("Block already on DB")
+	}
 		i++
 
 	}

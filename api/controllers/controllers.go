@@ -38,7 +38,7 @@ func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 
 	tx := DB.Table("trans_counts").
 		Select(`TO_CHAR(TO_TIMESTAMP(timestamp)  AT TIME ZONE 'Asia/Kolkata', 'HH24') AS hour, SUM(count) AS tx_count`).
-		Where(`TO_TIMESTAMP(timestamp) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kolkata' >= (CURRENT_DATE AT TIME ZONE 'Asia/Kolkata') - INTERVAL '1 day'`).
+		Where(`(TO_TIMESTAMP(timestamp) AT TIME ZONE 'Asia/Kolkata')::DATE = CURRENT_DATE`).
 		Group("hour").
 		Order("hour").
 		Scan(&results)
@@ -60,10 +60,10 @@ func GetlasttenCount(c *fiber.Ctx, DB *gorm.DB) error {
 	var tendays []TenCount
 
 	tx := DB.Table("trans_counts").
-		Select("date_trunc('day', to_timestamp(timestamp)) AS day, SUM(Count) AS transd_count").
-		Where("to_timestamp(timestamp) >= CURRENT_DATE - INTERVAL '10 days'").
-		Group(" date_trunc('day', to_timestamp(timestamp))").
-		Order("date_trunc('day', to_timestamp(timestamp))").
+		Select(`date_trunc('day', to_timestamp(timestamp)AT TIME ZONE 'Asia/Kolkata') AS day, SUM(count) AS transd_count`).
+		Where(`(to_timestamp(timestamp)AT TIME ZONE 'Asia/Kolkata') >= CURRENT_DATE - INTERVAL '10 days'`).
+		Group("day").
+		Order("day").
 		Scan(&tendays)
 
 	if err := tx.Error; err != nil {

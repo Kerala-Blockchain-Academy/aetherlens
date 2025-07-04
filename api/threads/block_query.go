@@ -25,9 +25,11 @@ func BlockQuery(DB *gorm.DB) {
 
 	var lastBlock models.Block
 
-	if err := DB.Last(&lastBlock).Error; err != nil {
+	if err := DB.Select("MAX(Number)").Scan(&lastBlock).Error; err != nil {
 		fmt.Println("Something wrong on getting data from DB")
 	}
+
+	fmt.Println("Last Block",lastBlock)
 
 	i := lastBlock.Number + 1
 	for {
@@ -38,10 +40,16 @@ func BlockQuery(DB *gorm.DB) {
 
 		blocks, err := controllers.GetBlockDetails(i)
 
+		var exists bool
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
+
+		err1 := DB.Raw("SELECT EXISTS (SELECT 1 FROM blocks WHERE number=?)",blocks.NumberU64()).Scan(&exists).Error
+		if(err1!=nil){
+			fmt.Println("Something went wrong in DB")
+		}else if(!exists){
 		newBlock := models.Block{
 			Number:     blocks.NumberU64(),
 			Hash:       blocks.Hash().Hex(),
@@ -127,6 +135,9 @@ func BlockQuery(DB *gorm.DB) {
 
 		}
 		fmt.Println("All Transactions entered")
+	}else{
+		fmt.Println("Block already in DB")
+	}
 		i++
 
 	}

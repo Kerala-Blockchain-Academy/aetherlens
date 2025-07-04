@@ -115,6 +115,7 @@ func main() {
 
 			if err := DB.First(&firstBlock).Error; err != nil { // Checking whether DB is empty
 				latestBlockNumber, err := Client.BlockNumber(context.Background()) // Get the latest block number
+				fmt.Println("Latest Block",latestBlockNumber)
 				if err != nil {
 					fmt.Println("Something wrong getting data", err)
 					return

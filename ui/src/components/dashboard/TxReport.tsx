@@ -19,10 +19,13 @@ const TxReport = () => {
     for (let j = 0; j < 24; j++) {
       counts[j] = 0;
     }
-
+    console.log("heelo",counts);
+    
     const response = await fetch('/api/tooDay');
     console.log(response);
-    if (response.status == 400) {
+    if (response.status == 400||response.status==500||response.status==502||response.status==404) {
+      console.log("Do Nothing");
+      
     } else {
       const data = await response.json();
       console.log(data);
@@ -40,6 +43,8 @@ const TxReport = () => {
       });
       console.log(counts);
     }
+    console.log("heelo",counts);
+    
     const dataB: any[] = [];
     counts.forEach((x: any) => {
       console.log('count', x);
@@ -203,7 +208,7 @@ const TxReport = () => {
 
     const response = await fetch('/api/tenday');
     console.log(response);
-    if (response.status == 400||response.status==404) {
+    if (response.status == 400||response.status==404||response.status==500||response.status==502) {
 
       console.log('No data available for the last 10 days');
       // Handle the case where no data is available
