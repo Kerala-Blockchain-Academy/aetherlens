@@ -19,19 +19,20 @@ func BlockQuery(DB *gorm.DB) {
 		fmt.Println("Error in connecting to Node")
 	}
 	latestBlockNumber, err := Client.BlockNumber(context.Background())
+	fmt.Println("Latest Block",latestBlockNumber)
 	if err != nil {
 		fmt.Println("Something wrong getting data")
 	}
 
-	var lastBlock models.Block
+	var lastBlock uint64
 
-	if err := DB.Select("MAX(Number)").Scan(&lastBlock).Error; err != nil {
+	if err := DB.Table("blocks").Select("MAX(number)").Scan(&lastBlock).Error; err != nil {
 		fmt.Println("Something wrong on getting data from DB")
 	}
 
 	fmt.Println("Last Block",lastBlock)
 
-	i := lastBlock.Number + 1
+	i := lastBlock + 1
 	for {
 
 		if i > latestBlockNumber {
