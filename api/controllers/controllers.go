@@ -267,7 +267,7 @@ func GetAllContractTx(c *fiber.Ctx, DB *gorm.DB) error {
 	cAddr := c.Params("id")
 	fmt.Println(cAddr)
 	var contractTx []models.Transaction
-	result := DB.Where("to_address = ?", cAddr).Order("time DESC").Limit(100).Find(&contractTx)
+	result := DB.Where("to_address = ?", cAddr).Order("time DESC").Limit(500).Find(&contractTx)
 	// result := DB.Table("transactions").Select("*").Where("to=?", cAddr).Scan(&contractTx)
 	fmt.Println(contractTx)
 

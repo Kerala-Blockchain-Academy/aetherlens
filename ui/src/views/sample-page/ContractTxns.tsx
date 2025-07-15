@@ -58,7 +58,7 @@ const ContractTxns = () => {
 //   
   
 // const [productList] = useState(lblk);
-  const [rowsLimit] = useState(10);
+  const [rowsLimit] = useState(50);
   console.log("Rowslimit",rowsLimit);
   
   const [rowsToShow, setRowsToShow] = useState([]);
@@ -137,6 +137,7 @@ const ContractTxns = () => {
           <h1 className="text-2xl font-medium">
             Contract Transactions
           </h1>
+          <p>Latest 500 transactions</p>
         </div>
         <div className="w-full overflow-x-scroll md:overflow-auto  max-w-7xl 2xl:max-w-none mt-2">
           <table className="table-auto overflow-scroll md:overflow-auto w-full text-left font-inter border ">

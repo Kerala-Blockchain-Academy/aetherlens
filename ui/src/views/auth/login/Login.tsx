@@ -21,7 +21,7 @@ const Login = () => {
                 <span className="text-rose-400">Lens</span>
               </h1>
             </div>
-            <p className="text-sm text-center text-dark my-3">Sign In on MaterialM</p>
+            {/* <p className="text-sm text-center text-dark my-3">Sign In on MaterialM</p> */}
             <AuthLogin />
             {/* <div className="flex gap-2 text-base text-ld font-medium mt-6 items-center justify-center">
               <p>New to MaterialM?</p>
