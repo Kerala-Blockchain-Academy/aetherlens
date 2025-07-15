@@ -50,8 +50,12 @@ Use URL parameters to access specific blocks, transactions, contracts directly.
 
 ## 📦 How To Start
 
-Edit the env.dev file with the parameters you need 
+Edit the env.dev file with the parameters you need
+
 ```
-git clone 
+git clone git@github.com:Kerala-Blockchain-Academy/aetherlens.git
+cd aetherlens
+make up
+```
 
 
