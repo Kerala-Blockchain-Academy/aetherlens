@@ -27,7 +27,7 @@ View all transactions involving smart contracts.
 
 Decode contract interactions using input data and ABI.
 
-Decode any transaction manually if you know the input and ABI.
+Decode any transaction  if you know the input data and ABI.
 
 ## 🔍 Search & Filter
 
