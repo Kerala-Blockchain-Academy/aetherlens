@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link,useNavigate } from 'react-router';
 import { useState,useEffect } from 'react';
 import { Toast, ToastToggle } from "flowbite-react";
 import { Icon } from '@iconify/react';
@@ -8,18 +8,39 @@ import TxCount from 'src/components/dashboard/TxCount';
 import TotalContract from 'src/components/dashboard/TotalContract';
 
 const Dashboard = () => {
+   const navigate = useNavigate()
   const [showAlert,setShowAlert] = useState(false)
-  
+  async function getUser(){
+    const response = await fetch("http://127.0.0.1:8080/verify",{
+      credentials:'include'
+    })
+    console.log(response);
+    
 
-   useEffect(() => {
-      async function fetchLatestBlock() {
+    if(response.status!=200){
+      alert('Sorry!You are not allowed')
+      navigate('/')
+    }
+
+    const data = await response.json();
+    console.log(data);
+    
+  }
+   async function fetchLatestBlock() {
+        
         const response = await fetch('/api/latestBlock');
         if(response.status==502 || response.status==500||response.status==400||response.status==403){
           setShowAlert(true);
         }
        
       }
-      fetchLatestBlock();
+
+   useEffect(() => {
+    const runSequentially = async()=>{
+        await getUser()
+        await fetchLatestBlock();
+    } 
+    runSequentially()
     }, []);
   return (
     <>

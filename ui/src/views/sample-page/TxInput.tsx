@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import React from 'react';
-import { Link } from 'react-router';
+import { Link,useNavigate } from 'react-router';
 import { Icon } from '@iconify/react';
 import { Label, Textarea } from 'flowbite-react';
 import { Button } from 'flowbite-react';
@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { Toast, ToastToggle } from "flowbite-react";
 
 const TxInput = () => {
+  const navigate = useNavigate();
   const [txInput, setTxInput] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [abi, setAbi] = useState([]);
@@ -18,6 +19,23 @@ const TxInput = () => {
   const [showWarn,setShowWarn] = useState(false)
 
   useEffect(() => {
+     async function getUser(){
+    const response = await fetch("http://127.0.0.1:8080/verify",{
+      credentials:'include'
+    })
+    console.log(response);
+    
+
+    if(response.status!=200){
+      alert('Sorry!You are not allowed')
+      navigate('/')
+    }
+
+    const data = await response.json();
+    console.log(data);
+    
+  }
+  getUser()
     const placeEl = document.getElementById('txButton');
     console.log(placeEl);
     if (placeEl) {
@@ -48,9 +66,10 @@ const TxInput = () => {
     let res = await fetch(`/api/txByNumber/${searchInput}`, {
       method: 'GET',
       redirect: 'follow',
+      credentials:'include'
     });
     console.log(res.status);
-    if(res.status==502 || res.status==500|| res.status==400|| res.status == 403){
+    if(res.status==502 || res.status==500|| res.status==400|| res.status == 404){
       setShowAlert(true);
     }
 
@@ -192,14 +211,14 @@ const TxInput = () => {
                 .replace(/: "(.*?)"/g, ': <span style="color: #8ce99a;">"$1"</span>') // string values
                 .replace(/: (\d+)/g, ': <span style="color: #91a7ff;">$1</span>'); // numbers
 
-              outputText += `<span style="color: #800080; font-weight: bold;">${key}:</span><pre style="color: #333333;display:inline;">${formatted}</pre><br/><br/>`;
+              outputText += `<span style="color: #800080; font-weight: bold;">${key}:</span><pre style="color: #333333 ">${formatted}</pre><br/><br/>`;
             } else if (typeof val === 'object') {
               const formatted = JSON.stringify(val, null, 2)
                 .replace(/"(.*?)":/g, '<span style="color: #f783ac;">"$1"</span>:')
                 .replace(/: "(.*?)"/g, ': <span style="color: #8ce99a;">"$1"</span>')
                 .replace(/: (\d+)/g, ': <span style="color: #91a7ff;">$1</span>');
 
-              outputText += `<span style="color: #800080; font-weight: bold;">${key}:</span><pre style="display:inline;">${formatted}</pre><br/><br/>`;
+              outputText += `<span style="color: #800080; font-weight: bold;">${key}:</span><pre >${formatted}</pre><br/><br/>`;
             } else {
               outputText += `<span style="color: #800080; font-weight: bold;">${key}:</span> <span style="color: #ffffff;">${val}</span><br/><br/>`;
             }
@@ -214,7 +233,7 @@ const TxInput = () => {
 
   return (
     <>
-      {showAlert && (
+     {showAlert && (
                <Toast>
                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-pink-100 text-pink-500 dark:bg-pink-800 dark:text-pink-200">
                  <Icon icon="garden:alert-warning-fill-12" className="h-5 w-5" />
@@ -233,7 +252,7 @@ const TxInput = () => {
              </Toast>
             )}
       <h5 className="card-title">Decoded Input</h5>
-      <div className="grid">
+      <div className="grid w-full p-2 bg-gray-100">
         <form className="w-full max-w-md mb-4" onSubmit={handleSearch}>
           <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
             Search
@@ -256,33 +275,48 @@ const TxInput = () => {
           </div>
         </form>
         <div id="txButton"></div>
-        <div className="flex flex-wrap gap-12">
-          <div className="max-w-md w-full md:w-1/2">
+        <div >
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className=" max-full md:w-1/2  ">
             <div className="mb-2 block">
               <Label htmlFor="comment">Transaction Input</Label>
             </div>
-            <Textarea id="comment" value={txInput} required rows={20} readOnly />
+            <Textarea id="comment" className='w-full' value={txInput} required rows={20} readOnly />
           </div>
-          <div className="max-w-md w-full md:w-1/2">
+          <div className=" max-full md:w-1/2 ">
             <div className="mb-2 block">
               <Label htmlFor="comment">ABI</Label>
             </div>
             <Textarea
-              id="comment"
+              id="comment1"
               onChange={handleChange}
               placeholder="Paste ABI here..."
               required
               rows={20}
+              className='w-full'
             />
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 mt-2 item-center justify-center">
+        </div>
+        <div className="flex mt-2 item-center justify-center">
           <Button onClick={handleDecode} color="error">
             Decode
           </Button>
         </div>
-        <div className="w-full">
-          <div className="mb-2 block">
+        <div className='w-full bg-gray-100'>
+          <div className="mb-2">
+            <Label htmlFor="comment">Decoded Output</Label>
+          </div>
+
+           <div
+            className="border rounded p-3 bg-transparent text-light w-1/2 md:max-w-[900px] overflow-x-auto "
+          
+          >
+            <pre id="Decoded" className="whitespace-pre bg-gray-100 p-4 rounded text-sm" ></pre>
+          </div>
+        </div>
+      
+         {/*  <div className="mb-2 block">
             <Label htmlFor="comment">Decoded Output</Label>
           </div>
 
@@ -291,9 +325,10 @@ const TxInput = () => {
             style={{ maxHeight: '500px', overflowY: 'auto' }}
           >
             <pre id="Decoded" className="mb-0" style={{ whiteSpace: 'pre-wrap' }}></pre>
-          </div>
+          </div> */}
         </div>
-      </div>
+      
+      
       <div className="col-span-12 text-center">
         <p className="text-base">
           Design and Developed by{''}

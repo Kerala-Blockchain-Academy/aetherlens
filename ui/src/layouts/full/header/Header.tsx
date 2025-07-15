@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from 'flowbite-react';
-// import Profile from './Profile';
+import Profile from './Profile';
 import { Drawer } from 'flowbite-react';
 import MobileSidebar from '../sidebar/MobileSidebar';
 import { useNavigate } from 'react-router';
@@ -15,9 +15,27 @@ const Header = () => {
     setBlockNumber(e.target.value);
   }
 
+  const isBlockNumber =(input:string):boolean =>{
+      return /^\d+$/.test(input);
+    }
+    const isTxHash = (input:string):boolean =>{
+      return /^0x([A-Fa-f0-9]{64})$/.test(input);
+    }
+
   function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    navigate(`/blocks/${blockNumber}`);
+    
+    if(isBlockNumber(blockNumber)){
+      console.log("Entered is a block number");
+      navigate(`/blocks/${blockNumber}`);
+    }
+    else if(isTxHash(blockNumber)){
+      console.log("Entered is a transaction hash");
+      navigate(`/txDetails/${blockNumber}`)
+    }
+    else{
+      alert("Please Check the details you entered")
+    }
     setBlockNumber('');
   }
 
@@ -83,7 +101,7 @@ const Header = () => {
                   value={blockNumber}
                   onChange={handleChange}
                   className="block size-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Enter Block Number....."
+                  placeholder="Search by Block/Txn Hash"
                   required
                 />
                 <button
@@ -95,7 +113,7 @@ const Header = () => {
               </div>
             </form>
 
-            {/* <Profile /> */}
+            <Profile />
             {/* </div> */}
           </div>
         </Navbar>

@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 	"time"
-
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
@@ -30,6 +30,7 @@ func Register(c *fiber.Ctx, DB *gorm.DB) error {
 		if err1 != nil {
 			continue
 		}
+		fmt.Println(byt)
 		admin.Password = string(byt)
 
 		var existing models.Register
@@ -49,6 +50,7 @@ func Register(c *fiber.Ctx, DB *gorm.DB) error {
 }
 
 func Login(c *fiber.Ctx, DB *gorm.DB) error {
+	fmt.Println("Welcome to login");
 	var login LoginD
 	var register models.Register
 	err1 := c.BodyParser(&login)
@@ -58,6 +60,7 @@ func Login(c *fiber.Ctx, DB *gorm.DB) error {
 	}
 
 	err := DB.Where("user_name=?", login.UserName).First(&register).Error
+	fmt.Println(register)
 	if err != nil {
 		return err
 	} else {
@@ -71,17 +74,35 @@ func Login(c *fiber.Ctx, DB *gorm.DB) error {
 			})
 
 			tokenString, err := token.SignedString(secretKey)
+			fmt.Println("Token Generated",tokenString)
 			if err != nil {
 				return c.Status(http.StatusForbidden).JSON("Something went wrong while token creation")
 			}
 			c.Cookie(&fiber.Cookie{
-				Name:     "AuthToken",
+				Name:     "AetherToken",
 				Value:    tokenString,
 				Expires:  time.Now().Add(2 * time.Hour),
 				HTTPOnly: true,
+				Secure: false,
+				SameSite: "None",             // explicitly allow cross-site use
+  			    Path:     "/",  
 			})
 			return c.Status(http.StatusOK).JSON("Successfully loggedin")
 		}
 	}
 
+}
+
+func Logout(c *fiber.Ctx,DB *gorm.DB) error{
+	c.Cookie(&fiber.Cookie{
+        Name:     "AetherToken",     // <-- match the original cookie name
+        Value:    "",
+        Expires:  time.Now().Add(-1 * time.Hour),
+        HTTPOnly: true,
+        Secure:   false,             // only if you're using HTTPS
+        SameSite: "None",
+        Path:     "/",              // must match how it was set
+    })
+
+	return c.Status(http.StatusOK).JSON("Succesfully Loggedout")
 }

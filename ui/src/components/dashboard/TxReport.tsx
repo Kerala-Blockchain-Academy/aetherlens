@@ -21,12 +21,19 @@ const TxReport = () => {
     }
     console.log("heelo",counts);
     
-    const response = await fetch('/api/tooDay');
+    const response = await fetch('/api/tooDay',{credentials:'include'});
     console.log(response);
     if (response.status == 400||response.status==500||response.status==502||response.status==404) {
-      console.log("Do Nothing");
+     console.log("No data on todays record");
+         counts.fill(0);
       
-    } else {
+    } 
+     else if(response.status == 401){
+        console.log("Unauthorized");
+        counts.fill(0);
+        
+      }
+    else {
       const data = await response.json();
       console.log(data);
 
@@ -206,7 +213,7 @@ const TxReport = () => {
       counts[j] = 0;
     }
 
-    const response = await fetch('/api/tenday');
+    const response = await fetch('/api/tenday',{credentials:'include'});
     console.log(response);
     if (response.status == 400||response.status==404||response.status==500||response.status==502) {
 
@@ -214,7 +221,13 @@ const TxReport = () => {
       // Handle the case where no data is available
       // You might want to set counts to an array of zeros or show a message
       counts.fill(0); // Fill counts with zeros if no data is available
-    } else {
+    }
+    else if(response.status == 401){
+        console.log("Unauthorized");
+        counts.fill(0);
+        
+      }
+    else {
       const data = await response.json();
       console.log(data);
 

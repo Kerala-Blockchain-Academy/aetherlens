@@ -20,6 +20,17 @@ type TenCount struct {
 	TransCount int64     `gorm:"column:transd_count"`
 }
 
+func VerifyUser(c *fiber.Ctx) error {
+	fmt.Println("Hello Dashboard")
+	username := c.Locals("username")
+	if username == "Admin" || username == "Admin1" || username == "Admin2" {
+		return c.Status(http.StatusOK).JSON(fiber.Map{"username": username, "msg": "OK"})
+	} else {
+		return c.Status(http.StatusBadGateway).JSON(fiber.Map{"msg": "Unauthorized user"})
+	}
+
+}
+
 func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	var results []DailyCount
 
@@ -46,7 +57,7 @@ func GetdailyCount(c *fiber.Ctx, DB *gorm.DB) error {
 	fmt.Println("today",results)
 
 	if err := tx.Error; err != nil {
-		return err
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"msg": "Internal Server error"})
 	}
 
 	if len(results) == 0 {
@@ -67,7 +78,7 @@ func GetlasttenCount(c *fiber.Ctx, DB *gorm.DB) error {
 		Scan(&tendays)
 
 	if err := tx.Error; err != nil {
-		return err
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"msg": "Internal Server error"})
 	}
 
 	fmt.Println(tendays)
@@ -201,6 +212,20 @@ func TxByNumber(c *fiber.Ctx, DB *gorm.DB) error {
 		return c.Status(http.StatusOK).JSON(&txDetails)
 	}
 
+}
+
+func TxByHash(c *fiber.Ctx, DB *gorm.DB)error{
+	txhash := c.Params("id")
+	fmt.Println("Transaction Hash",txhash)
+	var txHashDetails []models.Transaction
+
+	result := DB.Table("transactions").Select("*").Where("thash = ?",txhash).Scan(&txHashDetails)
+
+	if(result.Error!=nil){
+		return result.Error
+	} else{
+		return c.Status(http.StatusOK).JSON(&txHashDetails)
+	}
 }
 
 func GetLatestBlock(c *fiber.Ctx, DB *gorm.DB) error {

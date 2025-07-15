@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router';
+import { useParams, Link,useNavigate } from 'react-router';
 import { Label, Textarea } from 'flowbite-react';
 import { Icon } from '@iconify/react';
 import { Button, Toast, ToastToggle } from 'flowbite-react';
@@ -12,6 +12,7 @@ export default function BlkTx() {
     name: string;
     args: any[];
   }
+  const navigate = useNavigate()
   const [txHash, setTxHash] = useState('');
   const [txInput, setTxInput] = useState('');
   const [txOutput, setTxOutput] = useState<TxOutput>({ name: '', args: [] });
@@ -19,6 +20,23 @@ export default function BlkTx() {
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
+     async function getUser(){
+    const response = await fetch("http://127.0.0.1:8080/verify",{
+      credentials:'include'
+    })
+    console.log(response);
+    
+
+    if(response.status!=200){
+      alert('Sorry!You are not allowed')
+      navigate('/')
+    }
+
+    const data = await response.json();
+    console.log(data);
+    
+  }
+  getUser()
     console.log(thash.id);
 
     if (thash.id) setTxHash(thash.id);
@@ -134,14 +152,14 @@ export default function BlkTx() {
                 .replace(/: "(.*?)"/g, ': <span style="color: #8ce99a;">"$1"</span>') // string values
                 .replace(/: (\d+)/g, ': <span style="color: #91a7ff;">$1</span>'); // numbers
 
-              outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span><pre style="display:inline;">${formatted}</pre><br/><br/>`;
+              outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span><pre >${formatted}</pre><br/><br/>`;
             } else if (typeof val === 'object') {
               const formatted = JSON.stringify(val, null, 2)
                 .replace(/"(.*?)":/g, '<span style="color: #f783ac;">"$1"</span>:')
                 .replace(/: "(.*?)"/g, ': <span style="color: #8ce99a;">"$1"</span>')
                 .replace(/: (\d+)/g, ': <span style="color: #91a7ff;">$1</span>');
 
-              outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span><pre style="display:inline;">${formatted}</pre><br/><br/>`;
+              outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span><pre >${formatted}</pre><br/><br/>`;
             } else {
               outputText += `<span style="color: #FFB347; font-weight: bold;">${key}:</span> <span style="color: #f783ac;">${val}</span><br/><br/>`;
             }
@@ -169,46 +187,47 @@ export default function BlkTx() {
              </Toast>
             )}
       <h5 className="card-title">Decoded Input</h5>
-      <div className="grid">
-        <div className="flex flex-wrap gap-12">
-          <div className="max-w-md w-full md:w-1/2">
-            <div className="mb-2 block">
-              <Label htmlFor="comment">Transaction Input</Label>
-            </div>
-            <Textarea id="comment" value={txInput} required rows={20} readOnly />
-          </div>
-          <div className="max-w-md w-full md:w-1/2">
-            <div className="mb-2 block">
-              <Label htmlFor="comment">ABI</Label>
-            </div>
-            <Textarea
-              id="comment"
-              onChange={(e) => {
-                handleChange(e);
-              }}
-              placeholder="Paste ABI here..."
-              required
-              rows={20}
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2 mt-2 item-center justify-center">
-          <Button onClick={handleDecode} color="error">
-            Decode
-          </Button>
-        </div>
-        <div className="w-full">
-          <div className="mb-2 block">
-            <Label htmlFor="comment">Decoded Output</Label>
-          </div>
-
-          <div
-            className="border rounded p-3 bg-transparent text-light"
-            style={{ maxHeight: '500px', overflowY: 'auto' }}
-          >
-            <pre id="Decoded" className="mb-0" style={{ whiteSpace: 'pre-wrap' }}></pre>
-          </div>
-        </div>
+      <div className="grid w-full p-2 bg-gray-100">
+      <div >
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className=" max-full md:w-1/2  ">
+                  <div className="mb-2 block">
+                    <Label htmlFor="comment">Transaction Input</Label>
+                  </div>
+                  <Textarea id="comment" className='w-full' value={txInput} required rows={20} readOnly />
+                </div>
+                <div className=" max-full md:w-1/2 ">
+                  <div className="mb-2 block">
+                    <Label htmlFor="comment">ABI</Label>
+                  </div>
+                  <Textarea
+                    id="comment1"
+                    onChange={handleChange}
+                    placeholder="Paste ABI here..."
+                    required
+                    rows={20}
+                    className='w-full'
+                  />
+                </div>
+              </div>
+              </div>
+              <div className="flex mt-2 item-center justify-center">
+                <Button onClick={handleDecode} color="error">
+                  Decode
+                </Button>
+              </div>
+              <div className='w-full bg-gray-100'>
+                <div className="mb-2">
+                  <Label htmlFor="comment">Decoded Output</Label>
+                </div>
+      
+                 <div
+                  className="border rounded p-3 bg-transparent text-light w-1/2 md:max-w-[900px] overflow-x-auto "
+                
+                >
+                  <pre id="Decoded" className="whitespace-pre bg-gray-100 p-4 rounded text-sm" ></pre>
+                </div>
+              </div>
       </div>
       <div className="col-span-12 text-center">
         <p className="text-base">

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Outlet } from 'react-router';
-import ScrollToTop from 'src/components/shared/ScrollToTop';
+// import ScrollToTop from 'src/components/shared/ScrollToTop';
 import Sidebar from './sidebar/Sidebar';
 import Header from './header/Header';
 
@@ -17,13 +17,16 @@ const FullLayout: FC = () => {
 
             <div className={`bg-lightgray dark:bg-dark  h-full`}>
               {/* Body Content  */}
-              <div className={`w-full`}>
+              {/* <div className={`w-full`}>
                 <ScrollToTop>
                   <div className="container py-30">
                     <Outlet />
                   </div>
                 </ScrollToTop>
-              </div>
+              </div> */}
+                   <div className="flex-1 min-h-[90vh] px-4 md:p-6 lg:p-8 overflow-auto">
+        <Outlet />
+      </div>
             </div>
           </div>
         </div>

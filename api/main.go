@@ -16,6 +16,7 @@ import (
 	"github.com/pglekshmi/explorerGoPostgreSQL/db"
 	"github.com/pglekshmi/explorerGoPostgreSQL/models"
 	"github.com/pglekshmi/explorerGoPostgreSQL/threads"
+	"github.com/pglekshmi/explorerGoPostgreSQL/middleware"
 )
 
 func main() {
@@ -35,7 +36,11 @@ func main() {
 	fmt.Println("Setting Up fiber")
 	app := fiber.New()
 	app.Use(logger.New())
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "http://127.0.0.1",
+		AllowHeaders: "Origin, Content-Type, Accept",
+		AllowCredentials: true,
+	}))
 
 	app.Post("/register", func(c *fiber.Ctx) error { // Get All Contracts
 		return controllers.Register(c, DB)
@@ -45,59 +50,71 @@ func main() {
 		return controllers.Login(c, DB)
 	})
 
-	app.Get("/allContracts", func(c *fiber.Ctx) error { // Get All Contracts
+	app.Post("/logout", func(c *fiber.Ctx) error { // Get All Contracts
+		return controllers.Logout(c, DB)
+	})
+
+	app.Get("/verify", middleware.VerifyToken, func(c *fiber.Ctx) error { // verify user
+		return controllers.VerifyUser(c)
+	})
+
+	app.Get("/allContracts",middleware.VerifyToken,middleware.VerifyAdmin,func(c *fiber.Ctx) error { // Get All Contracts
 		return controllers.GetAllContracts(c, DB)
 	})
 
-	app.Get("/tooDay", func(c *fiber.Ctx) error { // Today's hourly Transaction count
+	app.Get("/tooDay",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Today's hourly Transaction count
 		return controllers.GetdailyCount(c, DB)
 	})
 
-	app.Get("/tenday", func(c *fiber.Ctx) error { // Last Ten day's Transaction Count
+	app.Get("/tenday",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Last Ten day's Transaction Count
 		return controllers.GetlasttenCount(c, DB)
 	})
 
-	app.Get("/blocks", func(c *fiber.Ctx) error { // Last 20 block Details
+	app.Get("/blocks", middleware.VerifyToken,middleware.VerifyAdmin,func(c *fiber.Ctx) error { // Last 20 block Details
 		return controllers.Get20Blocks(c, DB)
 	})
 
-	app.Get("/block/:id", func(c *fiber.Ctx) error { // Block Details of queried number
+	app.Get("/block/:id",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Block Details of queried number
 		return controllers.GetBlockbyNymber(c, DB)
 	})
 
-	app.Get("/trans", func(c *fiber.Ctx) error { // Last 20 Transaction details
+	app.Get("/trans", middleware.VerifyToken,middleware.VerifyAdmin,func(c *fiber.Ctx) error { // Last 20 Transaction details
 		return controllers.Get20Transactions(c, DB)
 	})
 
-	app.Get("/trans/:id", func(c *fiber.Ctx) error { // Transaction details of queried transaction hash
+	app.Get("/trans/:id",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Transaction details of queried transaction hash
 		return controllers.GetTransbyHash(c, DB)
 	})
 
-	app.Get("/transBlock/:id", func(c *fiber.Ctx) error { // Transaction details of queried block number
+	app.Get("/transBlock/:id",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Transaction details of queried block number
 		return controllers.GetTransbyBlock(c, DB)
 	})
 
-	app.Get("/transCount", func(c *fiber.Ctx) error { // Total Transaction count
+	app.Get("/transCount", middleware.VerifyToken,middleware.VerifyAdmin,func(c *fiber.Ctx) error { // Total Transaction count
 		return controllers.GetTotalTransactions(c, DB)
 	})
 
-	app.Get("/contractCount", func(c *fiber.Ctx) error { // Total Contract Created
+	app.Get("/contractCount", middleware.VerifyToken,middleware.VerifyAdmin,func(c *fiber.Ctx) error { // Total Contract Created
 		return controllers.GetContractCount(c, DB)
 	})
 
-	app.Get("/blockDetails", func(c *fiber.Ctx) error { // Total Contract Created
+	app.Get("/blockDetails", middleware.VerifyToken,middleware.VerifyAdmin,func(c *fiber.Ctx) error { // Total Contract Created
 		return controllers.GettenBlockDetails(c, DB)
 	})
 
-	app.Get("/txCountbyNumber/:id", func(c *fiber.Ctx) error { // TransactionCount on a block
+	app.Get("/txCountbyNumber/:id",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // TransactionCount on a block
 		return controllers.TxCountbyNumber(c, DB)
 	})
 
-	app.Get("/txByNumber/:id", func(c *fiber.Ctx) error { // Transactions on a block
+	app.Get("/txByNumber/:id",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Transactions on a block
 		return controllers.TxByNumber(c, DB)
 	})
 
-	app.Get("/txPresent/:id", func(c *fiber.Ctx) error { // Transactions on a block
+	app.Get("/txByHash/:id",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Transactions on a block
+		return controllers.TxByHash(c, DB)
+	})
+
+	app.Get("/txPresent/:id",middleware.VerifyToken,middleware.VerifyAdmin, func(c *fiber.Ctx) error { // Transactions on a block
 		return controllers.GetTxPresent(c, DB)
 	})
 
@@ -105,7 +122,7 @@ func main() {
 		return controllers.GetLatestBlock(c, DB)
 	})
 
-	app.Get("/contractTx/:id", func(c *fiber.Ctx) error { // Get all Transactions of a Contract Address
+	app.Get("/contractTx/:id", middleware.VerifyToken,middleware.VerifyAdmin,func(c *fiber.Ctx) error { // Get all Transactions of a Contract Address
 		return controllers.GetAllContractTx(c, DB)
 	})
 

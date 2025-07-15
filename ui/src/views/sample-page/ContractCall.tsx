@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
+import { Link,useNavigate } from 'react-router';
 import { Icon } from '@iconify/react';
 import { Table } from 'flowbite-react';
 
@@ -7,18 +7,45 @@ import SimpleBar from 'simplebar-react';
 
 const ContractCall = () => {
   console.log('Hello');
-
+  const navigate = useNavigate()
   const [contractCalls, setContractCalls] = useState([]);
   const [count, setCount] = useState(0);
   useEffect(() => {
+     async function getUser(){
+    const response = await fetch("http://127.0.0.1:8080/verify",{
+      credentials:'include'
+    })
+    console.log(response);
+    
+
+    if(response.status!=200){
+      alert('Sorry!You are not allowed')
+      navigate('/')
+    }
+
+    const data = await response.json();
+    console.log(data);
+    
+  }
+  getUser()
     ContractCall();
   }, []);
   async function ContractCall() {
     let res = await fetch('/api/allContracts', {
       method: 'GET',
       redirect: 'follow',
+      credentials:'include'
     });
     console.log(res);
+    if(res.status==400||res.status==404||res.status==500){
+      console.log("Data not available at DB or Internal server error");
+      setCount(0)
+    }
+    else if(res.status==401){
+      console.log("Unauthorized access");
+      setCount(0)
+    }
+    else{
 
     let lblk = [];
     lblk = await res.json();
@@ -26,7 +53,7 @@ const ContractCall = () => {
     const lblks = JSON.stringify(lblk);
     const lblkp = JSON.parse(lblks);
     setContractCalls(lblkp);
-  }
+  }}
 
   useEffect(() => {
     let c = 0;

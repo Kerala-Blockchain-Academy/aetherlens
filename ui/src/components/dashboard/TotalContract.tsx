@@ -8,9 +8,18 @@ const TotalContract = () => {
     async function fetchContractCount() {
       console.log('hello');
 
-      const response = await fetch('/api/contractCount');
+      const response = await fetch('/api/contractCount',{credentials:'include'});
       console.log('hi');
-
+       if(response.status==500||response.status==400||response.status==404){
+    console.log("Something went wrong on getting data");
+    setTotalContractCount(0)
+    
+  }
+  else if(response.status==401){
+    console.log("Unauthorized access");
+    setTotalContractCount(0)
+  }
+  else{
       const contra = await response.json();
       console.log('Latest', contra);
 
@@ -19,6 +28,7 @@ const TotalContract = () => {
       } else {
         console.log('Error Fetching Contratc count');
       }
+     }
     }
     fetchContractCount();
   }, []);

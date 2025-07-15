@@ -11,9 +11,18 @@ const TxCount = () => {
   async function fetchTotalTrans() {
     console.log('hello');
 
-    const response = await fetch('/api/transCount');
+    const response = await fetch('/api/transCount',{credentials:'include'});
     console.log('hi', response);
-
+      if(response.status==500||response.status==400||response.status==404){
+    console.log("Something went wrong on getting data");
+    setTotalTransCount(0)
+    
+  }
+  else if(response.status==401){
+    console.log("Unauthorized access");
+    setTotalTransCount(0)
+  }
+  else{
     const trans = await response.json();
     console.log('Latest', trans);
 
@@ -22,6 +31,7 @@ const TxCount = () => {
     } else {
       console.log('Error Fetching transaction count');
     }
+  }
   }
 
   return (

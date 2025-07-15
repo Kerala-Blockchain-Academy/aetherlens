@@ -5,6 +5,7 @@ import { Navigate, createBrowserRouter } from 'react-router';
 import Loadable from 'src/layouts/full/shared/loadable/Loadable';
 
 /* ***Layouts**** */
+const MinimalLayout = Loadable(lazy(() => import('../layouts/full/MinimalLayout'))); 
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
 
@@ -13,6 +14,7 @@ const Dashboard = Loadable(lazy(() => import('../views/dashboards/Dashboard')));
 const Block = Loadable(lazy(() => import('../views/blocks/blockDetails')));
 const TxInput = Loadable(lazy(() => import('../views/sample-page/TxInput')));
 const BlkTx = Loadable(lazy(() => import('../views/blocks/txDetails')));
+const TxDetails = Loadable(lazy(() => import('../views/sample-page/TxHashDetails')));
 const BlkTxInput = Loadable(lazy(() => import('../views/blocks/BlkTx')));
 const CCalls = Loadable(lazy(() => import('../views/sample-page/ContractCall')));
 const CTxns = Loadable(lazy(() => import('../views/sample-page/ContractTxns')));
@@ -33,11 +35,18 @@ const Register = Loadable(lazy(() => import('../views/auth/register/Register')))
 const Error = Loadable(lazy(() => import('../views/auth/error/Error')));
 
 const Router = [
+   {
+    path:'/',
+    element:<MinimalLayout />,
+    children:[
+      { path:'/',exact:true,element:<Login/>}
+    ]
+  },
   {
     path: '/',
     element: <FullLayout />,
     children: [
-      { path: '/', exact: true, element: <Dashboard /> },
+      // { path: '/', exact: true, element: <Dashboard /> },
       { path: '/dash', exact: true, element: <Dashboard /> },
       { path: '/ui/typography', exact: true, element: <Typography /> },
       { path: '/ui/table', exact: true, element: <Table /> },
@@ -47,6 +56,7 @@ const Router = [
       { path: '/txInput', exact: true, element: <TxInput /> },
       { path: '/blocks/:id', exact: true, element: <Block /> },
       { path: '/blkTx/:id', exact: true, element: <BlkTx /> },
+      { path: '/txDetails/:id', exact: true, element: <TxDetails /> },
       { path: '/blkTxInput/:id', exact: true, element: <BlkTxInput /> },
       { path: '/ccall', exact: true, element: <CCalls /> },
       { path: '/ctxns/:id', exact: true, element: <CTxns /> },
@@ -57,7 +67,7 @@ const Router = [
     path: '/',
     element: <BlankLayout />,
     children: [
-      { path: '/auth/login', element: <Login /> },
+      // { path: '/auth/login', element: <Login /> },
       { path: '/auth/register', element: <Register /> },
       { path: '404', element: <Error /> },
       { path: '/auth/404', element: <Error /> },

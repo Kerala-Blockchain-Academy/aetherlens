@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { Table } from 'flowbite-react';
+import {  Table } from 'flowbite-react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { useState, useEffect } from 'react';
 import SimpleBar from 'simplebar-react';
@@ -18,14 +18,48 @@ const BlockDetails = () => {
   });
 
   useEffect(() => {
-    BlockD();
+    
+        getUser()
   }, []);
-  async function BlockD() {
-    let res = await fetch(`/api/block/${blk.id}`, {
+   async function getUser(){
+    const response = await fetch("http://127.0.0.1:8080/verify",{
+      credentials:'include'
+    })
+    console.log(response);
+    
+
+    if(response.status!=200){
+      alert('Sorry!You are not allowed')
+      navigate('/')
+    }
+
+    // const data = await response.json();
+    // console.log(data);
+    else{
+       let res = await fetch(`/api/block/${blk.id}`, {
       method: 'GET',
       redirect: 'follow',
+      credentials:'include'
     });
     console.log(res);
+    if(res.status==400||res.status==404||res.status==500){
+      console.log("No data from DB or internal server error");
+      alert("No such blocks");
+      
+    }
+    else if(res.status==401){
+      setBlockDetails({
+    blocknumber: '',
+    blockhash: '',
+    parenthash: '',
+    gaslimit: '',
+    transactions: 0,
+    time: '',
+    size: '',
+  })
+  navigate('/')
+    }
+    else{
 
     let lblk;
 
@@ -88,6 +122,98 @@ const BlockDetails = () => {
 
     setBlockDetails(block);
   }
+
+    }
+    
+  }
+
+  // async function BlockD() {
+  //   let res = await fetch(`/api/block/${blk.id}`, {
+  //     method: 'GET',
+  //     redirect: 'follow',
+  //     credentials:'include'
+  //   });
+  //   console.log(res);
+  //   if(res.status==400||res.status==404||res.status==500){
+  //     console.log("No data from DB or internal server error");
+  //     alert("No such blocks");
+      
+  //   }
+  //   else if(res.status==401){
+  //     setBlockDetails({
+  //   blocknumber: '',
+  //   blockhash: '',
+  //   parenthash: '',
+  //   gaslimit: '',
+  //   transactions: 0,
+  //   time: '',
+  //   size: '',
+  // })
+  // navigate('/')
+  //   }
+  //   else{
+
+  //   let lblk;
+
+  //   lblk = await res.json();
+  //   console.log(lblk.ID);
+  //   if (lblk.ID == 0) {
+  //     navigate('/auth/404');
+  //   }
+
+  //   let result = await fetch(`/api/txCountbyNumber/${blk.id}`);
+  //   console.log(result);
+
+  //   let count;
+  //   count = await result.json();
+  //   console.log(count);
+  //   const btime = lblk.Time * 1000;
+  //   console.log(btime);
+  //   const date = new Date(btime);
+  //   console.log(date);
+  //   const cdate = Date.now();
+  //   console.log('date', cdate);
+  //   const diff = cdate - btime;
+  //   console.log(diff);
+  //   let ago;
+  //   if (diff > 59) {
+  //     const sec = Math.floor(diff / 1000);
+  //     console.log(sec);
+  //     if (sec > 59) {
+  //       const min = Math.floor(sec / 60);
+  //       console.log(min);
+  //       if (min > 59) {
+  //         const hr = Math.floor(min / 60);
+  //         console.log(hr);
+  //         if (hr > 23) {
+  //           const ddy = Math.floor(hr / 24);
+  //           console.log(ddy);
+  //           ago = `${ddy} days ago`;
+  //         } else {
+  //           ago = `${hr} hr ago`;
+  //         }
+  //       } else {
+  //         ago = `${min} min ago`;
+  //       }
+  //     } else {
+  //       ago = `${sec} secs ago`;
+  //     }
+  //   } else {
+  //     ago = `${diff} msecs ago`;
+  //   }
+
+  //   const block = {
+  //     blocknumber: lblk.Number,
+  //     blockhash: lblk.Hash,
+  //     parenthash: lblk.ParentHash,
+  //     gaslimit: lblk.GasLimit,
+  //     transactions: count,
+  //     time: ago,
+  //     size: lblk.Size,
+  //   };
+
+  //   setBlockDetails(block);
+  // }}
 
   const shortenHash = (hash: string) => {
     if (!hash) return '';

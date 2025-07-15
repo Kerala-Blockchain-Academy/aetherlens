@@ -4,13 +4,14 @@ import { useParams, Link,useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
 import SimpleBar from 'simplebar-react';
 
-const TxDetails = () => {
+const TxHashDetails = () => {
   const navigate = useNavigate()
   const [txDetails, setTxDetails] = useState([]);
-  const [count, setCount] = useState(0);
-  const blk = useParams();
-  console.log(blk.id);
-  useEffect(()=>{
+  // const [count, setCount] = useState(0);
+  const txhash = useParams();
+  console.log(txhash.id);
+
+  useEffect(() => {
     async function getUser(){
     const response = await fetch("http://127.0.0.1:8080/verify",{
       credentials:'include'
@@ -28,16 +29,17 @@ const TxDetails = () => {
     
   }
   getUser()
-  },[])
-
-  useEffect(() => {
-    
     TxD();
-  }, [blk.id]);
+  }, []);
+
+  useEffect(()=>{
+    TxD()
+  },[txhash.id])
   async function TxD() {
-    let res = await fetch(`/api/txByNumber/${blk.id}`, {
+    let res = await fetch(`/api/txByHash/${txhash.id}`, {
       method: 'GET',
       redirect: 'follow',
+      credentials:'include'
     });
     console.log(res);
     if(res.status==400||res.status==404||res.status==500){
@@ -77,30 +79,30 @@ const TxDetails = () => {
       alert('Please focus the page and try again.');
     }
   };
-  useEffect(() => {
-    setCount(0);
-    let c = 0;
-    txDetails.forEach((x) => {
-      console.log(x);
+  // useEffect(() => {
+  //   setCount(0);
+  //   let c = 0;
+  //   txDetails.forEach((x) => {
+  //     console.log(x);
 
-      c++;
-    });
-    setCount(c);
-  }, [txDetails]);
+  //     c++;
+  //   });
+  //   setCount(c);
+  // }, [txDetails]);
 
   return (
     <>
       <div className="rounded-lg dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray py-6 px-0 relative w-full break-words">
         <div className="px-6">
           <h5 className="card-title">Transaction Details</h5>
-          <p className="card-subtitle">{`For Block ${blk.id}`}</p>
+          <p className="card-subtitle">{`Transaction ${txhash.id}`}</p>
         </div>
         <SimpleBar className="max-h-[450px]">
           <div className="overflow-x-auto">
-            <p className="card-subtitle">Total {count} transactions found</p>
+            {/* <p className="card-subtitle">Total {count} transactions found</p> */}
             <Table hoverable>
               <Table.Head>
-                <Table.HeadCell className="p-6">TxHash</Table.HeadCell>
+                <Table.HeadCell className="p-6">Block Number</Table.HeadCell>
                 <Table.HeadCell>From</Table.HeadCell>
                 <Table.HeadCell>To</Table.HeadCell>
                 <Table.HeadCell>Input Data</Table.HeadCell>
@@ -117,15 +119,15 @@ const TxDetails = () => {
                           <div className="truncat line-clamp-2 sm:text-wrap max-w-56">
                             <h6 className="text-sm">
                               <span className="inline-flex items-center gap-1">
-                                {shortenHash(xParsed.Hash)}
-                                <Icon
+                                {xParsed.BlockNumber}
+                                {/* <Icon
                                   icon="material-symbols:ad-group-sharp"
                                   onClick={() => {
                                     handleCopy(xParsed.Hash);
                                   }}
                                   height="18"
                                   className="text-dark"
-                                />
+                                /> */}
                               </span>
                             </h6>
                           </div>
@@ -150,8 +152,7 @@ const TxDetails = () => {
                           </div>
                         </div>
                       </Table.Cell>
-                      
-                      <Table.Cell>
+                       <Table.Cell>
                         <h5 className="text-base text-wrap">
                           <span className="inline-flex items-center gap-1">
                             {shortenHash(xParsed.To)}
@@ -179,6 +180,7 @@ const TxDetails = () => {
                           </div>
                         </div>
                       </Table.Cell>
+                     
                       <Table.Cell>
                         <h5 className="text-base text-wrap">
                           <span className="inline-flex items-center gap-1">
@@ -210,4 +212,4 @@ const TxDetails = () => {
   );
 };
 
-export default TxDetails;
+export default TxHashDetails;

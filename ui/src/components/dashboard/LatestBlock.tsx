@@ -8,8 +8,16 @@ const LatestBlock = () => {
 
   useEffect(() => {
     async function fetchLatestBlock() {
-      const response = await fetch('/api/latestBlock');
-     
+      const response = await fetch('/api/latestBlock',{credentials:'include'});
+     if(response.status == 400 || response.status==404 || response.status==500){
+      console.log("No data found");
+      setLatestBlock(0)
+     }
+     else if(response.status == 401){
+      console.log("Unauthorized access");
+      setLatestBlock(0)
+     }
+     else{
       const blk = await response.json();
       console.log('Latest', blk);
 
@@ -18,6 +26,7 @@ const LatestBlock = () => {
       } else {
         console.log('Error Fetching block');
       }
+    }
     }
     fetchLatestBlock();
   }, []);

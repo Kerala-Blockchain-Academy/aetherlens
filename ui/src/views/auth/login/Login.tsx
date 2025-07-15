@@ -1,5 +1,5 @@
 import AuthLogin from '../authforms/AuthLogin';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 
 const gradientStyle = {
   background:
@@ -23,12 +23,12 @@ const Login = () => {
             </div>
             <p className="text-sm text-center text-dark my-3">Sign In on MaterialM</p>
             <AuthLogin />
-            <div className="flex gap-2 text-base text-ld font-medium mt-6 items-center justify-center">
+            {/* <div className="flex gap-2 text-base text-ld font-medium mt-6 items-center justify-center">
               <p>New to MaterialM?</p>
               <Link to="/auth/register" className="text-primary text-sm font-medium">
                 Create an account
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
